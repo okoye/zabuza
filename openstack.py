@@ -77,7 +77,8 @@ class User(object):
   def authenticate(self):
     '''
     Re-authenticate with the API by getting a brand spanking new token
-    Returns a boolean indicating if authentication was successful or not
+    Raises appropriate errors if authentication failed otherwise proceeds as
+    normal.
     '''
     if not self._can_authenticate():
       raise AttributeError('Either token or credentials must be available')
@@ -109,7 +110,7 @@ class User(object):
     if not self.tenant_name:
       return False
     
-    if self.auth_url == '' or self.auth_url = None:
+    if self.auth_url == '' or self.auth_url == None:
       return False
 
     return True
