@@ -27,11 +27,11 @@ class PasswordCredentials(unittest.TestCase):
 class UserTest(unittest.TestCase):
   def setUp(self):
     #assumes credentials are available in environment
-    url = environ.get('KEYSTONE_URL') or environ.get('KEYSTONE_ADMIN_URL')
-    username = environ.get('OS_USERNAME')
-    password = environ.get('OS_PASSWORD')
-    tenant = environ.get('TENANT')
-    token = environ.get('TOKEN')
+    url = environ.get('ZABUZA_AUTH_URL')
+    username = environ.get('ZABUZA_USERNAME')
+    password = environ.get('ZABUZA_PASSWORD')
+    tenant = environ.get('ZABUZA_TENANT_NAME')
+    token = environ.get('TOKEN') or None
     self.good_user = User(url, username=username, password=password,
       tenant_name=tenant)
     self.tokenized_user = User(url, token=token)
