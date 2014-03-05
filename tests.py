@@ -2,6 +2,10 @@ import unittest
 import logging
 from os import environ
 from openstack import User, Api, PasswordCredential
+try:
+  import json
+except ImportError:
+  import simplejson as json
 
 class PasswordCredentials(unittest.TestCase):
   def setUp(self):
@@ -9,11 +13,16 @@ class PasswordCredentials(unittest.TestCase):
     self.valid_cred = PasswordCredential(username='foo', password='bar')
 
   def test__credentials_properties(self):
+    valid_cred = PasswordCredential(username='foo', password='bar')
     self.assertTrue(hasattr(self.cred, 'username'))
     self.assertTrue(hasattr(self.cred, 'password'))
-    self.assertEquals(self.valid_cred.username, 'foo')
-    self.assertEquals(self.valid_cred.password, 'bar')
+    self.assertEquals(valid_cred.username, 'foo')
+    self.assertEquals(valid_cred.password, 'bar')
 
+  def test__credentials_serialization(self):
+    cred = PasswordCredential(username='foo', password='bar')
+    self.assertEquals(cred.json, json.dumps({'username':'foo', 'password':'bar'}))
+    self.assertEquals(cred.python_dict, {'username':'foo', 'password':'bar'})
 
 class UserTest(unittest.TestCase):
   def setUp(self):

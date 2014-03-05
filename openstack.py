@@ -1,3 +1,8 @@
+try:
+  import json
+except ImportError:
+  import simplejson as json
+
 class PasswordCredential(object):
   '''
   A representation of the password credentials object required
@@ -14,6 +19,16 @@ class PasswordCredential(object):
   @property
   def password(self):
     return self._password
+
+  @property
+  def json(self):
+    return json.dumps({'username': self.username,
+                        'password': self.password})
+  
+  @property
+  def python_dict(self):
+    return {'username': self.username,
+            'password': self.password}
 
   def __str__(self):
     return 'username: %s password: %s'%(self._username, self._password)
@@ -59,7 +74,8 @@ class User(object):
     Re-authenticate with the API by getting a brand spanking new token
     Returns a boolean indicating if authentication was successful or not
     '''
-    raise NotImplementedError
+    #TODO: contact the openstack rest API and exchange it for a token
+
 
     
 class Api(object):
