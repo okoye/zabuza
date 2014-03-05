@@ -1,4 +1,19 @@
 zabuza
 ======
 
-a python openstack REST API client. 
+an python openstack REST API client. 
+
+===========
+Installing
+===========
+#TODO
+
+===========
+Testing
+===========
+#TODO
+
+=========
+Notes
+=========
+#TODO
