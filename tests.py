@@ -1,7 +1,19 @@
 import unittest
 import logging
 from os import environ
-from openstack import User, Api
+from openstack import User, Api, PasswordCredential
+
+class PasswordCredentials(unittest.TestCase):
+  def setUp(self):
+    self.cred = PasswordCredential()
+    self.valid_cred = PasswordCredential(username='foo', password='bar')
+
+  def test__credentials_properties(self):
+    self.assertTrue(hasattr(self.cred, 'username'))
+    self.assertTrue(hasattr(self.cred, 'password'))
+    self.assertEquals(self.valid_cred.username, 'foo')
+    self.assertEquals(self.valid_cred.password, 'bar')
+
 
 class UserTest(unittest.TestCase):
   def setUp(self):
@@ -19,10 +31,10 @@ class UserTest(unittest.TestCase):
       password='1337haxor')
 
   def test__instantiation(self):
-    self.assertTrue(isinstance(User, self.good_user))
-    self.assertTrue(isinstance(User, self.tokenized_user))
-    self.assertTrue(isinstance(User, self.no_cred_user))
-    self.assertTrue(isinstance(User, self.bad_cred_user))
+    self.assertTrue(isinstance(self.good_user, User))
+    self.assertTrue(isinstance(self.tokenized_user, User))
+    self.assertTrue(isinstance(self.no_cred_user, User))
+    self.assertTrue(isinstance(self.bad_cred_user, User))
 
   def test__can_authenticate(self):
     #self.assertTrue(self.good_user.authenticate())

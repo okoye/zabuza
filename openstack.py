@@ -1,3 +1,22 @@
+class PasswordCredential(object):
+  '''
+  A representation of the password credentials object required
+  by keystone
+  '''
+  def __init__(self, username=None, password=None):
+    self._username = username
+    self._password = password
+
+  @property
+  def username(self):
+    return self._username
+
+  @property
+  def password(self):
+    return self._password
+
+  def __str__(self):
+    return 'username: %s password: %s'%(self._username, self._password)
 
 class User(object):
   '''
@@ -6,11 +25,25 @@ class User(object):
   '''
   def __init__(self, auth_url, username=None, password=None, token=None,
     tenant_name=None):
-    self.username = username
-    self.password = password
+    self._credentials = PasswordCredential(username, password)
     self.token = token #TODO: an actual token object
     self.tenant_name = tenant_name
     self.auth_url = auth_url
+
+  def _get_credentials(self):
+    return self._credentials
+
+  def _set_credentials(self, cred):
+    assert isinstance(PasswordCredentials, cred)
+    self._credentials = cred
+  
+  def _del_credentials(self):
+    del self._credentials
+
+  credentials = property(_get_credentials, 
+    _set_credentials, 
+    _del_credentials,
+    "credentials property")
 
   def is_authenticated(self):
     '''
