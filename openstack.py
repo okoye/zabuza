@@ -10,6 +10,7 @@ class User(object):
     self.password = password
     self.token = token #TODO: an actual token object
     self.tenant_name = tenant_name
+    self.auth_url = auth_url
 
   def is_authenticated(self):
     '''
@@ -23,6 +24,7 @@ class User(object):
   def authenticate(self):
     '''
     Re-authenticate with the API by getting a brand spanking new token
+    Returns a boolean indicating if authentication was successful or not
     '''
     raise NotImplementedError
 

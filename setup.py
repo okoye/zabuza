@@ -1,11 +1,11 @@
-__author__ = ''
+__author__ = 'The Zabuza Developers'
 __version__ = '0.1'
 
 METADATA = dict(
   name = 'zabuza',
   version = __version__,
   py_modules = ['openstack', 'keystone'],
-  author = 'Chuka Okoye',
+  author = __author__,
   author_email = 'contact@chookah.org',
   description = 'A python wrapper around Openstack API',
   url = 'https://github.com/okoye/zabuza',
