@@ -2,6 +2,8 @@ try:
   import json
 except ImportError:
   import simplejson as json
+import requests
+from traceback import format_exc
 
 class PasswordCredential(object):
   '''
@@ -29,6 +31,9 @@ class PasswordCredential(object):
   def python_dict(self):
     return {'username': self.username,
             'password': self.password}
+
+  def is_valid(self):
+    return self.username != None and self.password != None
 
   def __str__(self):
     return 'username: %s password: %s'%(self._username, self._password)
@@ -74,9 +79,40 @@ class User(object):
     Re-authenticate with the API by getting a brand spanking new token
     Returns a boolean indicating if authentication was successful or not
     '''
-    #TODO: contact the openstack rest API and exchange it for a token
+    if not self._can_authenticate():
+      raise AttributeError('Either token or credentials must be available')
+    post_data = dict()
+    if self.token:
+      post_data['token'] = token
+    else:
+      post_data['credentials'] = self.credentials.python_dict
+
+    post_data['tenantName'] = self.tenant_name
+    response = requests.post(self.auth_url, data=post_data)
+    if response.status_code == requests.codes.ok:
+      #create appropriate objects from returned response
+      print response
+    else:
+      response.raise_for_status()
 
 
+  def _can_authenticate(self):
+    '''
+    Verify that all the parameters necessary for authentication has been made
+    present:
+      username, password / token, tenant_name
+    '''
+    if not self.token:
+      if not self.credentials.is_valid():
+        return False
+
+    if not self.tenant_name:
+      return False
+    
+    if self.auth_url == '' or self.auth_url = None:
+      return False
+
+    return True
     
 class Api(object):
   '''
@@ -92,6 +128,7 @@ class Api(object):
     else:
       self.user = User(auth_url, username=username, password=password,
         token=token, tenant_name=tenant_name)
+    self.errors = []
 
   def verify_credentials(self):
     '''
@@ -100,4 +137,16 @@ class Api(object):
 
     returns a boolean indicate if verification was successful or not
     '''
-    raise NotImplementedError
+    if self.user.is_authenticated():
+      return True
+    else:
+      try:
+        self.user.authenticate()
+      except Exception as ex:
+        exc = format_exc()
+        self.errors.append(exc)
+        self.errors.append(str(ex))
+      else:
+        return True
+    return False
+
