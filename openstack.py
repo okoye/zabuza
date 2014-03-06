@@ -114,6 +114,9 @@ class User(object):
       return False
 
     return True
+
+  def __str__(self):
+    return 'token: %s, tenant:%s'%(self.token, self.tenant_name)
     
 class Api(object):
   '''
@@ -151,3 +154,5 @@ class Api(object):
         return True
     return False
 
+  def __str__(self):
+    raise NotImplementedError
