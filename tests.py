@@ -27,7 +27,7 @@ class PasswordCredentials(unittest.TestCase):
 class UserTest(unittest.TestCase):
   def setUp(self):
     #assumes credentials are available in environment
-    url = environ.get('ZABUZA_AUTH_URL')
+    url = environ.get('ZABUZA_TOKEN_URL')
     username = environ.get('ZABUZA_USERNAME')
     password = environ.get('ZABUZA_PASSWORD')
     tenant = environ.get('ZABUZA_TENANT_NAME')
