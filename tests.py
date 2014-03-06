@@ -46,7 +46,7 @@ class UserTest(unittest.TestCase):
     self.assertTrue(isinstance(self.bad_cred_user, User))
 
   def test__no_credentials_in_env(self):
-    self.assertRaises(AttributeError, self.no_cred_user.authenticate())
+    self.assertRaises(AttributeError, self.no_cred_user.authenticate)
 
   def test__can_authenticate(self):
     pass #self.assertTrue(self.good_user.authenticate())
