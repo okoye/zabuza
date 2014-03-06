@@ -87,10 +87,10 @@ class User(object):
     if self.token:
       post_data['auth']['token'] = token
     else:
-      post_data['auth']['credentials'] = self.credentials.python_dict
+      post_data['auth']['passwordCredentials'] = self.credentials.python_dict
 
     post_data['auth']['tenantName'] = self.tenant_name
-    logging.debug('authenticate data: %s'%post_data)
+    logging.debug('authenticate data: %s'%json.dumps(post_data))
     response = requests.post(self.auth_url, data=post_data)
     if response.status_code == requests.codes.ok:
       #create appropriate objects from returned response
