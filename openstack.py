@@ -1,9 +1,10 @@
+import requests
+import logging
+from traceback import format_exc
 try:
   import json
 except ImportError:
   import simplejson as json
-import requests
-from traceback import format_exc
 
 class PasswordCredential(object):
   '''
@@ -89,7 +90,7 @@ class User(object):
       post_data['credentials'] = self.credentials.python_dict
 
     post_data['tenantName'] = self.tenant_name
-    logging.debug('authenticate post data is %s'%post_data)
+    logging.debug('authenticate data: %s'%post_data)
     response = requests.post(self.auth_url, data=post_data)
     if response.status_code == requests.codes.ok:
       #create appropriate objects from returned response
