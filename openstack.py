@@ -83,13 +83,13 @@ class User(object):
     '''
     if not self._can_authenticate():
       raise AttributeError('Either token or credentials must be available')
-    post_data = dict()
+    post_data = {'auth': {}}
     if self.token:
-      post_data['token'] = token
+      post_data['auth']['token'] = token
     else:
-      post_data['credentials'] = self.credentials.python_dict
+      post_data['auth']['credentials'] = self.credentials.python_dict
 
-    post_data['tenantName'] = self.tenant_name
+    post_data['auth']['tenantName'] = self.tenant_name
     logging.debug('authenticate data: %s'%post_data)
     response = requests.post(self.auth_url, data=post_data)
     if response.status_code == requests.codes.ok:
