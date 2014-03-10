@@ -86,6 +86,8 @@ class User(object):
       self._token = token
     elif token is not None:
       raise Exception('supplied token must be a Token object')
+    else:
+      self._token = None
     self.tenant_name = tenant_name
     self.auth_url = auth_url
     self._id = None
@@ -124,6 +126,10 @@ class User(object):
   def roles(self):
     return self._roles
 
+  @property
+  def token(self):
+    return self._token
+
   def is_authenticated(self):
     '''
     Verified that we have and can authenticate against the openstack API.
@@ -158,14 +164,15 @@ class User(object):
     post_data['auth']['tenantName'] = self.tenant_name
     logging.debug('authenticate data: %s'%dumps(post_data))
     response = requests.post(self.auth_url, 
-      data=json.dumps(post_data),
+      data=dumps(post_data),
       headers={'content-type':'application/json'})
     if response.status_code == requests.codes.ok:
-      data_dict = loads(response.json())
+      data_dict = response.json()
       self._update_token(data_dict)
       self._update_user(data_dict)
     else:
       response.raise_for_status()
+    
 
   def _update_token(self, data_dict):
     token_info = data_dict['access']['token']
@@ -190,8 +197,13 @@ class User(object):
       username, password / token, tenant_name
     '''
     if not self.token:
+      logging.debug('no token available, checking if credentials valid')
       if not self.credentials.is_valid():
+        logging.debug('credentials invalid')
         return False
+    else:
+      logging.debug('a token is available, checking if unexpired')
+      return self.is_authenticated()
 
     if not self.tenant_name:
       return False

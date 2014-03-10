@@ -1,6 +1,7 @@
 import unittest
 import logging
 from os import environ
+from traceback import format_exc
 from openstack import User, Api, PasswordCredential, Token
 try:
   import json
@@ -50,8 +51,14 @@ class UserTest(unittest.TestCase):
     self.assertRaises(AttributeError, self.no_cred_user.authenticate)
 
   def test__can_authenticate(self):
-    self.assertTrue(self.good_user.authenticate())
-
+    try:
+      self.good_user.authenticate()
+    except Exception as ex:
+      msg = str(ex)
+      tb = format_exc()
+      self.fail('%s: %s'%(msg, tb))
+    else:
+      self.assertTrue(True) #noop really
 class TokenTest(unittest.TestCase):
   
   def test__missing_instantiation_parameters(self):
