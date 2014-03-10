@@ -8,6 +8,38 @@ try:
 except ImportError:
   from simplejson  import loads, dumps
 
+class Endpoint(object):
+  '''
+  A representation of a service endpoint which the authenticated user
+  can talk to.
+  '''
+  def __init__(self, *args, **kwargs):
+    '''
+    Expected keyword arguments:
+
+    '''
+    raise NotImplementedError
+
+class ServiceCatalog(object):
+  '''
+  A representation of a service catalog.
+  Allows you to retrieve endpoints of a specific service
+  '''
+  def __init__(self, *args, **kwargs):
+    '''
+    Expected keyword arguments:
+    
+    '''
+    #TODO: store a dict of endpoint_name to endpoint list 
+    raise NotImplementedError
+
+  def get_endpoint_for(self, service_name, region=None):
+    '''
+    Supported service_names include:
+      nova, neutron, cinder, glance, swift, keystone, ec2
+    '''
+    raise NotImplementedError
+
 class Token(object):
   '''
   A representation of a token credential obtained from keystone
