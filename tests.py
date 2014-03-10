@@ -50,7 +50,7 @@ class UserTest(unittest.TestCase):
     self.assertRaises(AttributeError, self.no_cred_user.authenticate)
 
   def test__can_authenticate(self):
-    pass #self.assertTrue(self.good_user.authenticate())
+    self.assertTrue(self.good_user.authenticate())
 
 class TokenTest(unittest.TestCase):
   
