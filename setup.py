@@ -13,7 +13,7 @@ METADATA = dict(
 )
 
 SETUPTOOLS_METADATA = dict(
-  install_requires = ['setuptools', 'simplejson', 'requests'],
+  install_requires = ['setuptools', 'simplejson', 'requests', 'python-dateutil'],
   include_package_data = True,
   test_suite = 'tests',
 )

@@ -1,15 +1,50 @@
 import requests
 import logging
 from traceback import format_exc
+from datetime import datetime
+from dateutil.parser import parse as dateparser
 try:
-  import json
+  from json import loads, dumps
 except ImportError:
-  import simplejson as json
+  from simplejson  import loads, dumps
+
+class Token(object):
+  '''
+  A representation of a token credential obtained from keystone
+  '''
+  def __init__(self, *args, **kwargs):
+    '''
+    Expected keyword arguments:
+    id: token id string
+    expires: ISO-8601 string representation of expiry time
+    issued_at: ISO-8601 string representation of time of issue
+    '''
+    #Fail if any expected parameter is not available.
+    self._id = kwargs['id']
+    self._expires = dateparser(kwargs['expires'])
+    self._issued_at = dateparser(kwargs['issued_at'])
+    self._tenant = kwargs['tenant']
+
+  @property
+  def id(self):
+    return self._id
+  
+  @property
+  def expires(self):
+    return self._expires
+
+  @property
+  def issued_at(self):
+    return self._issued_at
+
+  @property
+  def tenant(self):
+    return self._tenant
 
 class PasswordCredential(object):
   '''
   A representation of the password credentials object required
-  by keystone
+  by keystone before exchanging with a token
   '''
   def __init__(self, username=None, password=None):
     self._username = username
@@ -25,8 +60,8 @@ class PasswordCredential(object):
 
   @property
   def json(self):
-    return json.dumps({'username': self.username,
-                        'password': self.password})
+    return dumps({'username': self.username,
+                  'password': self.password})
   
   @property
   def python_dict(self):
@@ -47,9 +82,16 @@ class User(object):
   def __init__(self, auth_url, username=None, password=None, token=None,
     tenant_name=None):
     self._credentials = PasswordCredential(username, password)
-    self.token = token #TODO: an actual token object
+    if type(token) == Token:
+      self._token = token
+    elif token is not None:
+      raise Exception('supplied token must be a Token object')
     self.tenant_name = tenant_name
     self.auth_url = auth_url
+    self._id = None
+    self._username = None
+    self._name = None
+    self._roles = []
 
   def _get_credentials(self):
     return self._credentials
@@ -66,14 +108,38 @@ class User(object):
     _del_credentials,
     "credentials property")
 
+  @property
+  def id(self):
+    return self._id
+
+  @property
+  def username(self):
+    return self._username
+
+  @property
+  def name(self):
+    return self._name
+
+  @property
+  def roles(self):
+    return self._roles
+
   def is_authenticated(self):
     '''
     Verified that we have and can authenticate against the openstack API.
     Note that all operations done against the API will use your token supplied
     not your username/password pair. This routine also validates that our token
-    is still valid
+    is still valid.
+
+    Note, it simple checks that there is a token and its expiry is set for the
+    future. So, if a token has been revoked it is possible this will still
+    return success.
     '''
-    raise NotImplementedError
+    if self.token:
+      return self.token.expires.replace(tzinfo=None) > datetime.now()
+    else:
+      return False
+
 
   def authenticate(self):
     '''
@@ -90,14 +156,32 @@ class User(object):
       post_data['auth']['passwordCredentials'] = self.credentials.python_dict
 
     post_data['auth']['tenantName'] = self.tenant_name
-    logging.debug('authenticate data: %s'%json.dumps(post_data))
-    response = requests.post(self.auth_url, data=json.dumps(post_data))
+    logging.debug('authenticate data: %s'%dumps(post_data))
+    response = requests.post(self.auth_url, 
+      data=json.dumps(post_data),
+      headers={'content-type':'application/json'})
     if response.status_code == requests.codes.ok:
-      #create appropriate objects from returned response
-      print response
+      data_dict = loads(response.json())
+      self._update_token(data_dict)
+      self._update_user(data_dict)
     else:
       response.raise_for_status()
 
+  def _update_token(self, data_dict):
+    token_info = data_dict['access']['token']
+    self._token = Token(**token_info)
+
+  def _update_user(self, data_dict):
+    '''
+    Given the response from the token creation POST, set our user information
+    from the info returned by the Keystone service
+    '''
+    user_info = data_dict['access']['user']
+    #all these are optional and so dont break if not present
+    self._id = user_info.get('id', None)
+    self._name = user_info.get('name', None)
+    self._username = user_info.get('username', None)
+    self._roles = user_info.get('roles', None)
 
   def _can_authenticate(self):
     '''
