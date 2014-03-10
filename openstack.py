@@ -91,7 +91,7 @@ class User(object):
 
     post_data['auth']['tenantName'] = self.tenant_name
     logging.debug('authenticate data: %s'%json.dumps(post_data))
-    response = requests.post(self.auth_url, data=post_data)
+    response = requests.post(self.auth_url, data=json.dumps(post_data))
     if response.status_code == requests.codes.ok:
       #create appropriate objects from returned response
       print response
