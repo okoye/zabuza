@@ -2,7 +2,7 @@ import unittest
 import logging
 from os import environ
 from traceback import format_exc
-from openstack import User, Api, PasswordCredential, Token
+from openstack import User, Api, PasswordCredential, Token, Endpoint
 try:
   import json
 except ImportError:
@@ -59,6 +59,7 @@ class UserTest(unittest.TestCase):
       self.fail('%s: %s'%(msg, tb))
     else:
       self.assertTrue(True) #noop really
+
 class TokenTest(unittest.TestCase):
   
   def test__missing_instantiation_parameters(self):
@@ -72,9 +73,44 @@ class TokenTest(unittest.TestCase):
     self.assertTrue(hasattr(token, 'issued_at'))
     self.assertTrue(hasattr(token, 'tenant'))
 
-class ApiTest(unittest.TestCase):
-  pass
+class EndpointTest(unittest.TestCase):
+  
+  def setUp(self):
+    self.id = 'mah-id'
+    self.admin_url = 'http://foo.bar'
+    self.region = 'mars'
+    self.internal_url = 'http://bar.foo'
+    self.public_url = 'http://bar.foo.vim'
+    self.type = 'compute'
+    self.name = 'nova'
 
+  def test__no_attributes(self):
+    self.assertRaises(KeyError, Endpoint)
+
+  def test__instance_attributes_and_instantiation(self):
+    endpoint = Endpoint(admin_url=self.admin_url,
+                        region=self.region,
+                        internal_url=self.internal_url,
+                        id=self.id,
+                        public_url=self.public_url,
+                        type=self.type,
+                        name=self.name)
+    camel_endpoints = Endpoint(adminURL=self.admin_url,
+                                internalURL=self.internal_url,
+                                id=self.id,
+                                publicURL=self.public_url,
+                                type=self.type,
+                                name=self.name)
+    self.assertEquals(getattr(endpoint, 'admin_url'), self.admin_url)
+    self.assertEquals(getattr(endpoint, 'region'), self.region)
+    self.assertEquals(getattr(endpoint, 'internal_url'), self.internal_url)
+    self.assertEquals(getattr(endpoint, 'id'), self.id)
+    self.assertEquals(getattr(endpoint, 'public_url'), self.public_url)
+    self.assertEquals(getattr(endpoint, 'type'), self.type)
+    self.assertEquals(getattr(endpoint, 'name'), self.name)
+    self.assertTrue(hasattr(camel_endpoints, 'admin_url'))
+    self.assertTrue(hasattr(camel_endpoints, 'internal_url'))
+    self.assertTrue(hasattr(camel_endpoints, 'public_url'))
 
 if __name__ == '__main__':
   logging.basicConfig(level=logging.DEBUG)
