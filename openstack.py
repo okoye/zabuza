@@ -30,9 +30,9 @@ class Endpoint(object):
     '''
     self._admin_url = kwargs.get('admin_url') or kwargs.get('adminURL')
     self._region = kwargs.get('region')
-    self._internal_url = kwargs['internal_url'] or kwargs.get('internalURL')
+    self._internal_url = kwargs.get('internal_url') or kwargs.get('internalURL')
     self._id = kwargs['id']
-    self._public_url = kwargs['public_url'] or kwargs.get('publicURL')
+    self._public_url = kwargs.get('public_url') or kwargs.get('publicURL')
     self._type = kwargs['type']
     self._name = kwargs['name']
 
