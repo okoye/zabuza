@@ -13,12 +13,72 @@ class Endpoint(object):
   A representation of a service endpoint which the authenticated user
   can talk to.
   '''
+  #TODO: refactor into base entities.
   def __init__(self, *args, **kwargs):
     '''
     Expected keyword arguments:
+    admin_url: a url representing administration url of this service
+    region: what region is this service in
+    internal_url: internal url used to access this service
+    id: an id representing this endpoint's identifier in keystone
+    public_url: public url used to access this service
+    type: a valid nova service type string e.g volume, image
 
+    Note: these also supports openstack camel case args passing e.g
+    instead of specifying admin_url you could pass adminURL etc
     '''
-    raise NotImplementedError
+    #Fail if any expected parameter is unavailable.
+    self._admin_url = kwargs.get('admin_url', None) or kwargs.get('adminURL')
+    self._region = kwargs['region']
+    self._internal_url = kwargs['internal_url']
+    self._id = kwargs['id']
+    self._public_url = kwargs['public_url']
+    self._type = kwargs['type']
+    self._name = kwargs['name']
+
+  @property
+  def id(self):
+    return self._id
+
+  @property
+  def region(self):
+    return self._expires
+
+  @property
+  def internal_url(self):
+    return self._internal_url
+
+  @property
+  def public_url(self):
+    return self._public_url
+
+  @property
+  def type(self):
+    return self._type
+
+  @property
+  def name(self):
+    return self._name
+
+  def __eq__(self, other):
+    assert isinstance(other, Endpoint)
+    if self.admin_url != other.admin_url:
+      return False
+
+    if self.region != other.region:
+      return False
+
+    if self.internal_url != other.internal_url:
+      return False
+
+    if self.id != other.id:
+      return False
+
+    if self.public_url != other.public_url:
+      return False
+    
+    return True
+
 
 class ServiceCatalog(object):
   '''
@@ -28,10 +88,15 @@ class ServiceCatalog(object):
   def __init__(self, *args, **kwargs):
     '''
     Expected keyword arguments:
-    
+    service_catalog: a service catalog list object returned by keystone 
     '''
-    #TODO: store a dict of endpoint_name to endpoint list 
-    raise NotImplementedError
+    #break if there is no endpoints key
+    self._catalog = dict()
+    for service in kwargs['endpoints']:
+      temp = Endpoint(admin_url=service['adminURL'],
+                      region=service['']
+
+  def _keystone_to_python(self, 
 
   def get_endpoint_for(self, service_name, region=None):
     '''
@@ -116,7 +181,7 @@ class User(object):
     self._credentials = PasswordCredential(username, password)
     if type(token) == Token:
       self._token = token
-    elif token is not None:
+    elif token == None:
       raise Exception('supplied token must be a Token object')
     else:
       self._token = None
