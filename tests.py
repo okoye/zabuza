@@ -101,16 +101,16 @@ class EndpointTest(unittest.TestCase):
                                 publicURL=self.public_url,
                                 type=self.type,
                                 name=self.name)
-    self.assertEquals(getattr(endpoint, 'admin_url'), self.admin_url)
-    self.assertEquals(getattr(endpoint, 'region'), self.region)
-    self.assertEquals(getattr(endpoint, 'internal_url'), self.internal_url)
-    self.assertEquals(getattr(endpoint, 'id'), self.id)
-    self.assertEquals(getattr(endpoint, 'public_url'), self.public_url)
-    self.assertEquals(getattr(endpoint, 'type'), self.type)
-    self.assertEquals(getattr(endpoint, 'name'), self.name)
-    self.assertTrue(hasattr(camel_endpoints, 'admin_url'))
-    self.assertTrue(hasattr(camel_endpoints, 'internal_url'))
-    self.assertTrue(hasattr(camel_endpoints, 'public_url'))
+    self.assertEquals(getattr(endpoint, '_admin_url'), self.admin_url)
+    self.assertEquals(getattr(endpoint, '_region'), self.region)
+    self.assertEquals(getattr(endpoint, '_internal_url'), self.internal_url)
+    self.assertEquals(getattr(endpoint, '_id'), self.id)
+    self.assertEquals(getattr(endpoint, '_public_url'), self.public_url)
+    self.assertEquals(getattr(endpoint, '_type'), self.type)
+    self.assertEquals(getattr(endpoint, '_name'), self.name)
+    self.assertTrue(hasattr(camel_endpoints, '_admin_url'))
+    self.assertTrue(hasattr(camel_endpoints, '_internal_url'))
+    self.assertTrue(hasattr(camel_endpoints, '_public_url'))
 
 if __name__ == '__main__':
   logging.basicConfig(level=logging.DEBUG)
