@@ -92,10 +92,11 @@ class ServiceCatalog(object):
     #break if there is no endpoints key
     self._catalog = dict()
     for service in kwargs['endpoints']:
-      temp = Endpoint(admin_url=service['adminURL'],
-                      region=service['']
-
-  def _keystone_to_python(self, 
+      atype, aname = service['type'] , service['name']
+      if aname not in self._catalog:
+        self._catalog[name] = []
+      for endpoint in service['endpoints']:
+        self._catalog[name].append(Endpoint(name=aname, type=atype, **endpoint))
 
   def get_endpoint_for(self, service_name, region=None):
     '''
