@@ -188,10 +188,11 @@ class User(object):
     self._credentials = PasswordCredential(username, password)
     if type(token) == Token:
       self._token = token
-    elif token == None:
+    elif token != None:
       raise Exception('supplied token must be a Token object')
     else:
       self._token = None
+    
     self.tenant_name = tenant_name
     self.auth_url = auth_url
     self._id = None
