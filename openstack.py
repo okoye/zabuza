@@ -1,5 +1,6 @@
 import requests
 import logging
+from random import choice
 from traceback import format_exc
 from datetime import datetime
 from dateutil.parser import parse as dateparser
@@ -103,7 +104,13 @@ class ServiceCatalog(object):
     Supported service_names include:
       nova, neutron, cinder, glance, swift, keystone, ec2
     '''
-    raise NotImplementedError
+    if service_name not in self._catalog:
+      raise ValueError('Unrecognized service endpoint specified')
+    selector = lambda endpoints: choice(endpoints)
+    if not region:
+      return selector(self._catalog[service_name])
+    else:
+      return filter(lambda x: x.region == region, self._catalog[service_name])
 
 class Token(object):
   '''
