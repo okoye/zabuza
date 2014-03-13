@@ -4,7 +4,8 @@ A python openstack REST API client. Why? Because there is no easy to use
 central python api client for openstack like boto for AWS.
 
 This is a work in progress therefore suggestions, contributions are very
-welcome.
+welcome .
+
 ===========
 Installing
 ===========
