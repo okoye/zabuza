@@ -6,7 +6,6 @@ central python api client for openstack like boto for AWS.
 This is a work in progress therefore suggestions, contributions are very
 welcome .
 
-===========
 Installing
 ===========
 Simply clone this repository and run the setup.py to install. You could
@@ -24,7 +23,6 @@ variables defined in your environment:
 Optionally, you could choose not to include have these variables available and
 pass them during invocation of the Openstack api module.
 
-=========
 Notes
 =========
 It is being tested with Openstack Havana release and should work for python
