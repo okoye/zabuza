@@ -93,11 +93,11 @@ class ServiceCatalog(object):
     #break if there is no endpoints key
     self._catalog = dict()
     for service in kwargs['service_catalog']:
-      atype, aname = service['type'] , service['name']
+      atype, aname = service['type'], service['name']
       if aname not in self._catalog:
-        self._catalog[name] = []
+        self._catalog[aname] = []
       for endpoint in service['endpoints']:
-        self._catalog[name].append(Endpoint(name=aname, type=atype, **endpoint))
+        self._catalog[aname].append(Endpoint(name=aname, type=atype, **endpoint))
 
   def get_endpoint_for(self, service_name, region=None):
     '''
