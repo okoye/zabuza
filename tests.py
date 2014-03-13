@@ -141,7 +141,9 @@ class ServiceCatalogTest(unittest.TestCase):
     ])
 
   def test__attributes(self):
-    pass
+    self.assertTrue(hasattr(self.sc_template, '_catalog'))
+    self.assertTrue(isinstance(Endpoint, sc.get_endpoint_for(self.name)))
+    self.assertEquals(sc.get_endpoint_for('nothing'), None)
 
 if __name__ == '__main__':
   logging.basicConfig(level=logging.DEBUG)
