@@ -329,6 +329,26 @@ class Api(object):
 
   def __init__(self, auth_url, username=None, password=None, token=None,
     tenant_name=None, user=None):
+    '''
+    The base API object representing virtually all openstack service calls.
+
+    Args:
+      auth_url:
+        the admin url where tokens can be generated and authenticated. [Required]
+      username:
+        user you want this application to run as in keystone [Optional]
+      password:
+        associated password of user [Optional]
+      token:
+        a previously generated Token object [Optional]
+      tenant_name:
+        what tenant will I be running under
+      user:
+        a user object previously generated [Optional]
+
+      Note, either the username and password or token must be specified unless
+      you have provided a user object
+    '''
     if user:
       assert isinstance(User, user)
       self.user = user
@@ -356,6 +376,14 @@ class Api(object):
       else:
         return True
     return False
+  
+  def CreateServer(self, server, user_data=None, user=None):
+    '''
+
+    '''
+    raise NotImplementedError
+
 
   def __str__(self):
-    raise NotImplementedError
+    #TODO: what is an appropriate representation of an API object?
+    pass

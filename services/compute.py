@@ -22,6 +22,8 @@ class Server(object):
                 tenant_id=None,
                 updated=None,
                 user_id=None,
+                availability_zone=None,
+                security_group_name=None,
                 **kwargs):
     '''
     Should be instantiated by the openstack.api class typically.
@@ -44,9 +46,9 @@ class Server(object):
       host_id:
         what openstack compute host are we hosted on [Optional]
       image:
-        what image are we booting off [Optional]
+        what image [id or url] are we booting off [Optional]
       metadata:
-        other user specified metadata associated with me [Optional]
+        key value metadata with max size 255 bytes [Optional]
       name:
         what is my user given name [Optional]
       progress:
@@ -59,6 +61,10 @@ class Server(object):
         last time this info was updated [Optional]
       user_id:
         user that owns and created me [Optional]
+      availability_zone:
+        what availability zone does this server belong to [Optional]
+      security_group_name:
+        security group currently applied to this server [Optional]
     '''
     if admin_pass:
       self._admin_pass = admin_pass
@@ -66,50 +72,24 @@ class Server(object):
     if not kwargs.get('id'):
       raise Exception("you must specify an id for a server at least")
     else:
-      self._id = kwargs.get('id') 
+      self._id = kwargs.get('id')
     
-    if access_ipv4:
-      self._access_ipv4 = access_ipv4
-
-    if access_ipv6:
-      self._access_ipv6 = access_ipv6
-
-    if addresses:
-      self._addresses = addresses
-
-    if created:
-      self._created = created
-
-    if flavor:
-      self._flavor = flavor
-
-    if host_id:
-      self._host_id = host_id
-
-    if image:
-      self._image = image
-
-    if metadata:
-      self._metadata = metadata
-
-    if name:
-      self._name = name
-
-    if progress:
-      self._progress = progress
-
-    if status:
-      self._status = status
-
-    if tenant_id:
-      self._tenant_id = tenant_id
-
-    if updated:
-      self._updated = updated
-
-    if user_id:
-      self._user_id = user_id
-
+    self._access_ipv4 = access_ipv4 or None
+    self._access_ipv6 = access_ipv6 or None
+    self._addresses = addresses or None
+    self._created = created or None
+    self._flavor = flavor or None
+    self._host_id = host_id or None
+    self._image = image or None
+    self._metadata = metadata or None
+    self._name = name or None
+    self._progress = progress or None
+    self._status = status or None
+    self._tenant_id = tenant_id or None
+    self._updated = updated or None
+    self._user_id = user_id or None
+    self._security_group_name = security_group_name or None
+    self._availability_zone = availability_zone or None
 
   @classmethod
   def create_server(self, *args, **kwargs):
@@ -130,12 +110,14 @@ class Server(object):
             status=kwargs.get('status'),
             tenant_id=kwargs.get('tenantId'),
             updated=kwargs.get('updated'),
-            user_id=kwargs.get('user_id') or kwargs.get('userId'))
+            user_id=kwargs.get('user_id') or kwargs.get('userId'),
+            availability_zone=kwargs.get('availability_zone') or kwargs.get('availabilityZone'),
+            security_group_name=kwargs.get('security_group_name') or kwargs.get('securityGroupName'))
   
   def get_id(self):
     return self._id
 
-  id = property(get_id, doc='server id')
+   id = property(get_id, doc='server id')
 
   def get_admin_pass(self):
     return self._admin_pass
@@ -261,7 +243,7 @@ class Server(object):
     self._updated = value
 
   updated = property(get_updated, set_updated,
-                    doc='last time this server was updated')
+                    doc='datetime object this server was updated')
 
   def get_user_id(self):
     return self._user_id
@@ -271,3 +253,22 @@ class Server(object):
 
   user_id = property(get_user_id, set_user_id,
                     doc='user id of owner of this server')
+
+  def get_availability_zone(self):
+    return self._availability_zone
+
+  def set_availability_zone(self, value):
+    self._availability_zone = value
+
+  availability_zone = property(get_availability_zone, set_availability_zone,
+                              doc='string representing availability zone')
+
+  def get_security_group_name(self):
+    return self._security_group_name
+
+  def set_security_goup_name(self, value):
+    self._security_group_name = value
+
+  security_group_name = property(get_security_group_name,
+                                  set_security_group_name,
+                                  doc='string representing the security group name')
