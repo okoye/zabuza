@@ -4,6 +4,7 @@ from os import environ
 from traceback import format_exc
 from openstack import User, Api, PasswordCredential, Token, Endpoint
 from openstack import ServiceCatalog
+from services.compute import Server
 try:
   import json
 except ImportError:
@@ -145,6 +146,22 @@ class ServiceCatalogTest(unittest.TestCase):
     self.assertTrue(hasattr(self.sc_template, '_catalog'))
     self.assertTrue(isinstance(self.sc.get_endpoint_for(self.name), Endpoint))
     self.assertRaises(ValueError, self.sc.get_endpoint_for, 'nothing')
+
+class ServerTest(unittest.TestCase):
+
+  def setUp(self):
+    self.id = 'some id'
+
+  def test__no_id_instantiation(self):
+    self.assertRaises(Exception, Server, tenant_id='1234')
+    self.assertRaises(Exception, Server.create_server)
+
+  def test__proper_instantiation(self):
+    server = Server(id=1234)
+    self.assertTrue(hasattr(server, 'id'))
+    server = Server.create_server(**{'id':'1234'})
+    self.assertTrue(hasattr(server, 'id'))
+
 
 if __name__ == '__main__':
   logging.basicConfig(level=logging.DEBUG)
