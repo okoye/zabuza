@@ -117,7 +117,7 @@ class Server(object):
   def get_id(self):
     return self._id
 
-   id = property(get_id, doc='server id')
+  id = property(get_id, doc='server id')
 
   def get_admin_pass(self):
     return self._admin_pass
@@ -266,7 +266,7 @@ class Server(object):
   def get_security_group_name(self):
     return self._security_group_name
 
-  def set_security_goup_name(self, value):
+  def set_security_group_name(self, value):
     self._security_group_name = value
 
   security_group_name = property(get_security_group_name,
