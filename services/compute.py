@@ -113,7 +113,11 @@ class Server(object):
             user_id=kwargs.get('user_id') or kwargs.get('userId'),
             availability_zone=kwargs.get('availability_zone') or kwargs.get('availabilityZone'),
             security_group_name=kwargs.get('security_group_name') or kwargs.get('securityGroupName'))
-  
+
+  @classmethod
+  def create_server_for_deployment(self):
+    raise NotImplementedError
+
   def get_id(self):
     return self._id
 

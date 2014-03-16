@@ -377,12 +377,34 @@ class Api(object):
         return True
     return False
   
-  def CreateServer(self, server, user_data=None, user=None):
+  def create_server(self, server, user_data=None, user=None):
     '''
+    Create a new server. The main required parameter is a server.
 
+    Args:
+      server:
+        a server object. recommended to create with the 
+      user_data:
+        base64 encoded configuration info and scripts to use upon launch
+      user:
+        a user object that has been authenticated
     '''
-    raise NotImplementedError
+    user = user or self.user
+    if not user:
+      raise Exception("you must provide a valid user")
+    if not user.is_authenticated():
+      user.
 
+  def _assert_preconditions(self, user=None):
+    '''
+    check authentication preconditions
+    '''
+    user = user or self.user
+    if user:
+      if not user.is_authenticated():
+        user.authenticate()
+    else:
+      raise Exception("you must provide a valid user")
 
   def __str__(self):
     #TODO: what is an appropriate representation of an API object?
