@@ -92,7 +92,9 @@ class ServiceCatalog(object):
     '''
     #break if there is no endpoints key
     self._catalog = dict()
-    for service in kwargs['service_catalog']:
+    sc = kwargs.get('service_catalog') or kwargs.get('serviceCatalog')
+    assert sc is not None
+    for service in sc:
       atype, aname = service['type'], service['name']
       if aname not in self._catalog:
         self._catalog[aname] = []
@@ -199,6 +201,8 @@ class User(object):
     self._username = None
     self._name = None
     self._roles = []
+    self._catalog = None
+
 
   def _get_credentials(self):
     return self._credentials
@@ -294,6 +298,7 @@ class User(object):
     self._name = user_info.get('name', None)
     self._username = user_info.get('username', None)
     self._roles = user_info.get('roles', None)
+    self._catalog = ServiceCatalog(**user_info)
 
   def _can_authenticate(self):
     '''
@@ -390,16 +395,15 @@ class Api(object):
         a user object that has been authenticated
     '''
     user = user or self.user
-    if not user:
-      raise Exception("you must provide a valid user")
-    if not user.is_authenticated():
-      user.
+    self._assert_preconditions(user=user)
+    
+
+
 
   def _assert_preconditions(self, user=None):
     '''
     check authentication preconditions
     '''
-    user = user or self.user
     if user:
       if not user.is_authenticated():
         user.authenticate()
