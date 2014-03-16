@@ -140,7 +140,7 @@ class Server(object):
     assert flavor is not None
     assert name is not None
 
-    return Server(id=None,
+    return Server(id='null',
               image=image,
               flavor=flavor,
               name=name,

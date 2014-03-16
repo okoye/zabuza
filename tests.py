@@ -161,7 +161,10 @@ class ServerTest(unittest.TestCase):
     self.assertTrue(hasattr(server, 'id'))
     server = Server.create_server(**{'id':'1234'})
     self.assertTrue(hasattr(server, 'id'))
-
+    
+  def test__deploy_server_instantiation(self):
+    server = Server.create_server_for_deployment('foo', 'bar', 'vaz')
+    self.assertTrue(isinstance(server, Server))
 
 if __name__ == '__main__':
   logging.basicConfig(level=logging.DEBUG)
