@@ -282,6 +282,11 @@ class User(object):
     else:
       response.raise_for_status()
     
+  def endpoint_manager(self, service_name, **kwargs):
+    '''
+    convenience function for service catalog's get_endpoint_for func
+    '''
+    return self._catalog.get_endpoint_for(service_name, **kwargs)
 
   def _update_token(self, data_dict):
     token_info = data_dict['access']['token']
@@ -293,7 +298,7 @@ class User(object):
     from the info returned by the Keystone service
     '''
     user_info = data_dict['access']['user']
-    #all these are optional and so dont break if not present
+    #some of these are optional and so dont break if not present
     self._id = user_info.get('id', None)
     self._name = user_info.get('name', None)
     self._username = user_info.get('username', None)
@@ -396,9 +401,24 @@ class Api(object):
     '''
     user = user or self.user
     self._assert_preconditions(user=user)
-    
+    endpoint = self.user.endpoint_manager('nova')
+    url = endpoint.get_url(['servers']) #TODO: implement
 
+    #now, construct parameters
+    parameters = {'server': {}}
+    parameters['server']['flavorRef'] = server.flavor
+    parameters['server']['imageRef'] = server.image
+    parameters['server']['name'] = server.name
+    if server.availability_zone:
+      parameters['server']['availability_zone'] = server.availability_zone
+    if server.metadata:
+      parameters['server']['metadata'] = server.metadata
+    if server.security_group:
+      parameters['server']['security_group'] = server.security_group
+    if user_data:
+      parameters['server']['user_data'] = user_data
 
+    #TODO: now post to api and update server parameters based on response
 
   def _assert_preconditions(self, user=None):
     '''

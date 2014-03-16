@@ -115,8 +115,39 @@ class Server(object):
             security_group_name=kwargs.get('security_group_name') or kwargs.get('securityGroupName'))
 
   @classmethod
-  def create_server_for_deployment(self):
-    raise NotImplementedError
+  def create_server_for_deployment(self, image, flavor, name, **kwargs):
+    '''
+    convenience function for creating __and__ ensuring basic info for
+    creating a new server is provided
+
+    Args:
+      image:
+        an id or url reference to image [Required]
+      flavor:
+        an id or url reference to flavor [Required]
+      name:
+        a string name of this box [Required]
+      metadata:
+        dict of relevant metadata [Optional]
+      availability_zone:
+        a string representing az [Optional]
+      user_data:
+        specific user data for cloud init base64 encoded [Optional]
+      security_group:
+        what is my security group [Optional]
+    '''
+    assert image is not None
+    assert flavor is not None
+    assert name is not None
+
+    return Server(id=None,
+              image=image,
+              flavor=flavor,
+              name=name,
+              metadata=kwargs.get('metadata'),
+              availability_zone=kwargs.get('availability_zone'),
+              user_data=kwargs.get('user_data'),
+              security_group=kwargs.get('security_group'))
 
   def get_id(self):
     return self._id
