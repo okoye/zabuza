@@ -60,6 +60,18 @@ class Endpoint(object):
   def name(self):
     return self._name
 
+  def fetch_url(self, path):
+    '''
+    Construct a proper url given a path
+    Args:
+      path:
+        a list of all string tokens in a path e.g [foo, bar, vim] which
+        corresponds to <base_url>/foo/bar/vim
+    '''
+    if type(path) != list:
+      path = [path]
+    return '/'.join([self._public_url]+path)
+
   def __eq__(self, other):
     assert isinstance(other, Endpoint)
     if self.admin_url != other.admin_url:
@@ -402,7 +414,7 @@ class Api(object):
     user = user or self.user
     self._assert_preconditions(user=user)
     endpoint = self.user.endpoint_manager('nova')
-    url = endpoint.get_url(['servers']) #TODO: implement
+    url = endpoint.fetch_url(['servers'])
 
     #now, construct parameters
     parameters = {'server': {}}
