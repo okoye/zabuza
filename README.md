@@ -28,11 +28,31 @@ Using
 Zabuza provides python client for Openstack APIs (keystone, nova, at this time)
 
 To get more information about a specific module e.g the openstack module:
-**
+
 >>> import openstack
 >>> help(openstack)
-**
 
+To use the API we need to instantiate an 'Api' object with some authentication
+parameters passed in. E.g
+
+>>> openstack.Api('http://keystone:35357/v2.0/tokens',username='foo', password='bar')
+
+you could also pass in a token object or a user object that was stored as a
+pickled object (remember to deserialize it before passing in)
+
+>>> openstack.Api('http://keystone:35357/v2.0/tokens', token=mytoken,
+>>>               tenant_name='demo')
+>>> openstack.Api('http://keystone:35357/v2.0/tokens', user=auser,
+>>>               tenant_name='demo')
+
+If you have an existing token you could just construct your own token object:
+
+>>> token = openstack.Token(id='token-id',
+>>>                         expires='2014-03-10T14:47:21.383780',
+>>>                         issued_at='2014-03-10T14:47:21.383780',
+>>>                         tenant='your-tenant-name')
+
+and then pass the token parameter as shown above.
 
 Notes
 =========

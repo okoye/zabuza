@@ -137,6 +137,7 @@ class Token(object):
     id: token id string
     expires: ISO-8601 string representation of expiry time
     issued_at: ISO-8601 string representation of time of issue
+    tenant: tenant name this token is associated with
     '''
     #Fail if any expected parameter is not available.
     self._id = kwargs['id']
