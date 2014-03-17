@@ -315,7 +315,7 @@ class User(object):
     self._name = user_info.get('name', None)
     self._username = user_info.get('username', None)
     self._roles = user_info.get('roles', None)
-    self._catalog = ServiceCatalog(**user_info)
+    self._catalog = ServiceCatalog(data_dict['access']['serviceCatalog'])
 
   def _can_authenticate(self):
     '''
