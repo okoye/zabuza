@@ -442,8 +442,48 @@ class Api(object):
     json_data = self._post_url(url, parameters)
     logging.debug('returned data was %s'%json_data)
     server.update_properties(**json_data['server'])
+  
+  def fetch_server_detail(self server):
+    raise NotImplementedError
 
+  def fetch_server_details(self, **kwargs):
+    raise NotImplementedError
 
+  def _fetch_server_details(self,
+                            url,
+                            flavor=None, 
+                            name=None, 
+                            limit=None, 
+                            host=None,
+                            user=None):
+    user = user or self.user
+    self._assert_preconditions(user=user)
+
+    #construct parameters if any
+    parameters = {}
+    if flavor:
+      parameters['flavor'] = flavor
+    if name:
+      parameters['name'] = name
+    if limit:
+      parameters['limit'] = limit
+    if host:
+      parameters['host'] = host
+    
+    logging.debug('now fetching details with url %s and options %s'%(url, parameters))
+    json_data = self._get_url(url, parameters)
+    logging.debug('returned data was %s'%json_data)
+
+    if 'servers' in json_data:
+      return self._iterator(json_data['servers'])
+    elif 'server' in json_data:
+      return json_data['server']
+    else:
+      raise Exception('unrecognized parameter in returned json data')
+
+  def _get_url(self, url, value):
+    raise NotImplementedError
+  
   def _post_url(self, url, value):
     response = requests.post(url, data=dumps(value),
                               headers={'content-type': 'application/json',
