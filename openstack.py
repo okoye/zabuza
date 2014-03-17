@@ -162,6 +162,9 @@ class Token(object):
   def __str__(self):
     return self._id
 
+  def __repr__(self):
+    return self._id
+
 class PasswordCredential(object):
   '''
   A representation of the password credentials object required
@@ -440,8 +443,8 @@ class Api(object):
 
   def _post_url(self, url, value):
     response = requests.post(url, data=dumps(value),
-                              headers={'content-type': 'application/json'},
-                              X-Auth-Token=str(self.user.token))
+                              headers={'content-type': 'application/json',
+                                        'X-Auth-Token':str(self.user.token)})
     if response.status_code == requests.codes.ok:
       return response.json()
     else:
