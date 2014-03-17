@@ -450,6 +450,7 @@ class Api(object):
       logging.debug('create_server returned status code %s'%response.status_code)
       return response.json()
     else:
+      logging.debug('response failed with status code %s'%response.status_code)
       response.raise_for_status()
 
   def _assert_preconditions(self, user=None):
