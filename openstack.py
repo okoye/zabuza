@@ -430,7 +430,13 @@ class Api(object):
     if user_data:
       parameters['server']['user_data'] = user_data
 
-    #TODO: now post to api and update server parameters based on response
+    logging.debug('now creating server %s at url %s'%(parameters, url))
+    json_data = self._post_url(url, parameters)
+    server.id = json_data['server']['id']
+    server.admin_Pass = json_data['server']['adminPass']
+    
+  def _post_url(self, url, value):
+    pass
 
   def _assert_preconditions(self, user=None):
     '''

@@ -66,14 +66,12 @@ class Server(object):
       security_group_name:
         security group currently applied to this server [Optional]
     '''
-    if admin_pass:
-      self._admin_pass = admin_pass
-
     if not kwargs.get('id'):
       raise Exception("you must specify an id for a server at least")
     else:
       self._id = kwargs.get('id')
     
+    self._admin_pass = admin_pass or None
     self._access_ipv4 = access_ipv4 or None
     self._access_ipv6 = access_ipv6 or None
     self._addresses = addresses or None
@@ -148,6 +146,10 @@ class Server(object):
               availability_zone=kwargs.get('availability_zone'),
               user_data=kwargs.get('user_data'),
               security_group=kwargs.get('security_group'))
+
+  def update_properties(self, **kwargs):
+    self._id = kwargs.get('id') or self._id
+    self._admin_pass = kwargs.get('adminPass') or self._admin_pass
 
   def get_id(self):
     return self._id
