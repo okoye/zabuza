@@ -438,6 +438,7 @@ class Api(object):
 
     logging.debug('now creating server %s at url %s'%(parameters, url))
     json_data = self._post_url(url, parameters)
+    logging.debug('returned data was %s'%json_data)
     server.update_properties(**json_data['server'])
 
 
