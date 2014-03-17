@@ -436,7 +436,12 @@ class Api(object):
 
 
   def _post_url(self, url, value):
-    return {'server': {'id':'test', 'adminPass':'chookah'}}
+    response = requests.post(url, data=dumps(value),
+                              headers={'content-type': 'application/json'})
+    if response.status_code == requests.codes.ok:
+      return response.json()
+    else:
+      response.raise_for_status()
 
   def _assert_preconditions(self, user=None):
     '''
