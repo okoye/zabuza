@@ -176,7 +176,10 @@ class ApiTest(unittest.TestCase):
     self.api = Api(url, username=username, password=password, tenant_name=tenant)
 
   def test__create_server(self):
-    server = Server.create_server_for_deployment('foo', 'bar', 'baz')
+    image = environ.get('ZABUZA_TEST_IMAGE_ID')
+    flavor = environ.get('ZABUZA_TEST_FLAVOR_ID') or 1
+    name = 'zabuza_test_create_server'
+    server = Server.create_server_for_deployment(image, flavor, name)
     self.api.create_server(server)
     self.assertTrue(hasattr(server, 'admin_pass'))
     self.assertTrue(server.admin_pass is not None)
