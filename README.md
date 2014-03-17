@@ -54,6 +54,14 @@ If you have an existing token you could just construct your own token object:
 
 and then pass the token parameter as shown above.
 
+After authenticating with the Api, you can now execute the api methods or just
+simply validate your credentials by calling the verify_credentials.
+
+For more information on supported api methods call:
+>>> help(openstack.Api)
+
+
+
 Notes
 =========
 It is being tested with Openstack Havana release and should work for python
