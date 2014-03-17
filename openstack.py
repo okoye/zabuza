@@ -446,7 +446,7 @@ class Api(object):
     response = requests.post(url, data=dumps(value),
                               headers={'content-type': 'application/json',
                                         'X-Auth-Token':str(self.user.token)})
-    if response.status_code == requests.codes.ok:
+    if response.status_code == requests.codes.accepted:
       logging.debug('create_server returned status code %s'%response.status_code)
       return response.json()
     else:
