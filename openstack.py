@@ -1,5 +1,6 @@
 import requests
 import logging
+import base64
 from random import choice
 from traceback import format_exc
 from datetime import datetime
@@ -405,15 +406,15 @@ class Api(object):
         return True
     return False
   
-  def create_server(self, server, user_data=None, user=None):
+  def create_server(self, server, user_data_file=None, user=None):
     '''
     Create a new server. The main required parameter is a server.
 
     Args:
       server:
         a server object. recommended to create with the 
-      user_data:
-        base64 encoded configuration info and scripts to use upon launch
+      user_data_file:
+        file path to a user data file
       user:
         a user object that has been authenticated
     '''
@@ -433,8 +434,8 @@ class Api(object):
       parameters['server']['metadata'] = server.metadata
     if server.security_group_name:
       parameters['server']['security_group'] = server.security_group_name
-    if user_data:
-      parameters['server']['user_data'] = user_data
+    if user_data_file:
+      parameters['server']['user_data'] = base64.b64encode(open(user_data_file).read())
 
     logging.debug('now creating server %s at url %s'%(parameters, url))
     json_data = self._post_url(url, parameters)

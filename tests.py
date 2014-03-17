@@ -184,6 +184,15 @@ class ApiTest(unittest.TestCase):
     self.assertTrue(hasattr(server, 'admin_pass'))
     self.assertTrue(server.admin_pass is not None)
 
+  def test__create_server_with_userdata(self):
+    image = environ.get('ZABUZA_TEST_IMAGE_ID')
+    flavor = environ.get('ZABUZA_TEST_FLAVOR_ID') or 1
+    name = 'zabuza_test_create_server_with_userdata'
+    server = Server.create_server_for_deployment(image, flavor, name)
+    self.api.create_server(server, user_data_file='/tmp/foo.sh')
+    self.assertTrue(hasattr(server, 'admin_pass'))
+    self.assertTrue(server.admin_pass is not None)
+
 if __name__ == '__main__':
   logging.basicConfig(level=logging.DEBUG)
   unittest.main()

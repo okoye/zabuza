@@ -48,7 +48,7 @@ class Server(object):
       image:
         what image [id or url] are we booting off [Optional]
       metadata:
-        key value metadata with max size 255 bytes [Optional]
+        key value metadata with max size 255 bytes per key and value [Optional]
       name:
         what is my user given name [Optional]
       progress:
@@ -79,7 +79,7 @@ class Server(object):
     self._flavor = flavor or None
     self._host_id = host_id or None
     self._image = image or None
-    self._metadata = metadata or None
+    self._metadata = metadata or {}
     self._name = name or None
     self._progress = progress or None
     self._status = status or None
