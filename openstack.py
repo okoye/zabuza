@@ -425,8 +425,8 @@ class Api(object):
       parameters['server']['availability_zone'] = server.availability_zone
     if server.metadata:
       parameters['server']['metadata'] = server.metadata
-    if server.security_group:
-      parameters['server']['security_group'] = server.security_group
+    if server.security_group_name:
+      parameters['server']['security_group'] = server.security_group_name
     if user_data:
       parameters['server']['user_data'] = user_data
 
