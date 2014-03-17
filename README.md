@@ -14,14 +14,25 @@ variables defined in your environment:
 
 **ZABUZA_TOKEN_URL**: Your keystone admin token url where tokens are generated
 
-**ZABUZA_USERNAME**
+**ZABUZA_USERNAME**: A keystone account preferably an administrator
 
-**ZABUZA_PASSWORD**
+**ZABUZA_PASSWORD**: Password for the provided keystone account
 
-**ZABUZA_TENANT_NAME**
+**ZABUZA_TENANT_NAME**: Tenant this account belongs to
 
 Optionally, you could choose not to include have these variables available and
 pass them during invocation of the Openstack api module.
+
+Using
+=====
+Zabuza provides python client for Openstack APIs (keystone, nova, at this time)
+
+To get more information about a specific module e.g the openstack module:
+**
+>>> import openstack
+>>> help(openstack)
+**
+
 
 Notes
 =========
