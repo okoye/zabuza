@@ -447,6 +447,8 @@ class Api(object):
                               headers={'content-type': 'application/json',
                                         'X-Auth-Token':str(self.user.token)})
     if response.status_code == requests.codes.ok:
+      logging.debug('create_server returned status code
+      %s'%response.status_code)
       return response.json()
     else:
       response.raise_for_status()
