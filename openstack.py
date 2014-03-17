@@ -436,7 +436,7 @@ class Api(object):
 
 
   def _post_url(self, url, value):
-    return {'id':'test', 'adminPass':'chookah'}
+    return {'server': {'id':'test', 'adminPass':'chookah'}}
 
   def _assert_preconditions(self, user=None):
     '''
