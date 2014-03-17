@@ -466,5 +466,5 @@ class Api(object):
       raise Exception("you must provide a valid user")
 
   def __str__(self):
-    #TODO: what is an appropriate representation of an API object?
-    pass
+    value = 'API %s:%s'%(auth_url, username)
+    return value
