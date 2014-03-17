@@ -432,11 +432,11 @@ class Api(object):
 
     logging.debug('now creating server %s at url %s'%(parameters, url))
     json_data = self._post_url(url, parameters)
-    server.id = json_data['server']['id']
-    server.admin_Pass = json_data['server']['adminPass']
-    
+    server.update_properties(**json_data['server'])
+
+
   def _post_url(self, url, value):
-    pass
+    return {'id':'test', 'adminPass':'chookah'}
 
   def _assert_preconditions(self, user=None):
     '''

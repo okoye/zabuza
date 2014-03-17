@@ -166,6 +166,21 @@ class ServerTest(unittest.TestCase):
     server = Server.create_server_for_deployment('foo', 'bar', 'vaz')
     self.assertTrue(isinstance(server, Server))
 
+class ApiTest(unittest.TestCase):
+
+  def setUp(self):
+    url = environ.get('ZABUZA_TOKEN_URL')
+    username = environ.get('ZABUZA_USERNAME')
+    password = environ.get('ZABUZA_PASSWORD')
+    tenant = environ.get('ZABUZA_TENANT_NAME')
+    self.api = Api(url, username=username, password=password, tenant_name=tenant)
+
+  def test__create_server(self):
+    server = Server.create_server_for_deployment('foo', 'bar', 'baz')
+    self.api.create_server(server)
+    self.assertTrue(hasattr(server, 'admin_pass'))
+    self.assertTrue(server.admin_pass is not None)
+
 if __name__ == '__main__':
   logging.basicConfig(level=logging.DEBUG)
   unittest.main()
