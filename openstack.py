@@ -443,7 +443,7 @@ class Api(object):
     logging.debug('returned data was %s'%json_data)
     server.update_properties(**json_data['server'])
   
-  def fetch_server_detail(self server):
+  def fetch_server_detail(self, server):
     raise NotImplementedError
 
   def fetch_server_details(self, **kwargs):

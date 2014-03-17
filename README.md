@@ -29,9 +29,7 @@ Zabuza provides python client for Openstack APIs (keystone, nova, at this time)
 
 To get more information about a specific module e.g the openstack module:
 
->>> import openstack
-and then..
->>> help(openstack)
+>>> import openstack; help(openstack)
 
 To use the API we need to instantiate an 'Api' object with some authentication
 parameters passed in. E.g
