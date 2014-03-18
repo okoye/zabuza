@@ -407,7 +407,8 @@ class Api(object):
         return True
     return False
   
-  def create_server(self, server, user_data_file=None, user=None):
+  def create_server(self, server, user_data_file=None, user=None,
+                    compute_type='compute'):
     '''
     Create a new server. The main required parameter is a server.
 
@@ -419,10 +420,12 @@ class Api(object):
         file path to a user data file
       user:
         a user object that has been authenticated
+      compute_type:
+        type of compute, e.g compute or computev3
     '''
     user = user or self.user
     self._assert_preconditions(user=user)
-    endpoint = self.user.endpoint_manager('nova')
+    endpoint = self.user.endpoint_manager(compute_type)
     url = endpoint.fetch_url(['servers'])
 
     #now, construct parameters
