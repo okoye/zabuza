@@ -413,7 +413,8 @@ class Api(object):
 
     Args:
       server:
-        a server object. recommended to create with the 
+        a server object. recommended to create with the
+        create_server_for_deployment factory method in Server object.
       user_data_file:
         file path to a user data file
       user:
@@ -443,10 +444,25 @@ class Api(object):
     logging.debug('returned data was %s'%json_data)
     server.update_properties(**json_data['server'])
   
-  def fetch_server_detail(self, server):
-    raise NotImplementedError
+  def get_server_detail(self, server=None, server_id=None):
+    '''
+    Get details of a specific server. 
 
-  def fetch_server_details(self, **kwargs):
+    Args:
+      server:
+        a server object. [Optional]
+      server_id:
+        id of server we want info on [Optional]
+
+    Note that either the server or server_id must be specified.
+    '''
+    if not server:
+      if not server_id or server_id == '':
+        raise Exception('either a server or server_id must be specified')
+    url = None
+    return self._fetch_server_details(url)
+
+  def get_server_details(self, **kwargs):
     raise NotImplementedError
 
   def _fetch_server_details(self,
@@ -480,6 +496,10 @@ class Api(object):
       return json_data['server']
     else:
       raise Exception('unrecognized parameter in returned json data')
+  
+  def _iterator(self, an_iterable):
+    for element in an_iterable:
+      yield element
 
   def _get_url(self, url, parameters, success_codes=[requests.codes.ok]):
     response = requests.get(url, data,

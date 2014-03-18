@@ -54,7 +54,7 @@ class UserTest(unittest.TestCase):
 
   def test__can_authenticate(self):
     try:
-      pass #self.good_user.authenticate()
+      self.good_user.authenticate()
     except Exception as ex:
       msg = str(ex)
       tb = format_exc()
