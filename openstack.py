@@ -110,22 +110,22 @@ class ServiceCatalog(object):
     for service in sc:
       atype, aname = service['type'], service['name']
       if aname not in self._catalog:
-        self._catalog[aname] = []
+        self._catalog[atype] = []
       for endpoint in service['endpoints']:
-        self._catalog[aname].append(Endpoint(name=aname, type=atype, **endpoint))
+        self._catalog[atype].append(Endpoint(name=aname, type=atype, **endpoint))
 
-  def get_endpoint_for(self, service_name, region=None):
+  def get_endpoint_for(self, service_type, region=None):
     '''
-    Supported service_names include:
-      nova, neutron, cinder, glance, swift, keystone, ec2
+    Supported service_types include:
+      s3, volumev2, network, compute, computev3
     '''
-    if service_name not in self._catalog:
-      raise ValueError('Unrecognized service endpoint specified')
+    if service_type not in self._catalog:
+      raise ValueError('Unrecognized service type endpoint specified')
     selector = lambda endpoints: choice(endpoints)
     if not region:
-      return selector(self._catalog[service_name])
+      return selector(self._catalog[service_type])
     else:
-      return filter(lambda x: x.region == region, self._catalog[service_name])
+      return filter(lambda x: x.region == region, self._catalog[service_type])
 
 class Token(object):
   '''
