@@ -481,15 +481,23 @@ class Api(object):
     else:
       raise Exception('unrecognized parameter in returned json data')
 
-  def _get_url(self, url, value):
-    raise NotImplementedError
-  
+  def _get_url(self, url, parameters, success_codes=[requests.codes.ok]):
+    response = requests.get(url, data,
+                            headers={'content-type':'application/json',
+                                     'X-Auth-Token':str(self.user.token)})
+    if response.status_code in success_codes:
+      logging.debug('get_url returned status code %s'%response.status_code)
+      return response.json()
+    else:
+      logging.debug('response failed with status code %s'%response.status_code)
+      response.raise_for_status()
+     
   def _post_url(self, url, value):
     response = requests.post(url, data=dumps(value),
                               headers={'content-type': 'application/json',
                                         'X-Auth-Token':str(self.user.token)})
     if response.status_code == requests.codes.accepted:
-      logging.debug('create_server returned status code %s'%response.status_code)
+      logging.debug('post_url returned status code %s'%response.status_code)
       return response.json()
     else:
       logging.debug('response failed with status code %s'%response.status_code)
