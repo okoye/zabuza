@@ -120,6 +120,8 @@ class ServiceCatalog(object):
       s3, volumev2, network, compute, computev3
     '''
     if service_type not in self._catalog:
+      logging.debug('here is service catalog: %s'%self._catalog)
+      logging.debug('here is service_type %s'%service_type)
       raise ValueError('Unrecognized service type endpoint specified')
     selector = lambda endpoints: choice(endpoints)
     if not region:
