@@ -109,7 +109,7 @@ class ServiceCatalog(object):
     assert sc is not None
     for service in sc:
       atype, aname = service['type'], service['name']
-      if aname not in self._catalog:
+      if atype not in self._catalog:
         self._catalog[atype] = []
       for endpoint in service['endpoints']:
         self._catalog[atype].append(Endpoint(name=aname, type=atype, **endpoint))
