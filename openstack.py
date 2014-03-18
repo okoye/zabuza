@@ -444,7 +444,7 @@ class Api(object):
     logging.debug('returned data was %s'%json_data)
     server.update_properties(**json_data['server'])
   
-  def get_server_detail(self, server=None, server_id=None):
+  def get_server_detail(self, server=None, server_id=None, user=None):
     '''
     Get details of a specific server. 
 
@@ -459,7 +459,7 @@ class Api(object):
     if not server:
       if not server_id or server_id == '':
         raise Exception('either a server or server_id must be specified')
-    url = None
+
     return self._fetch_server_details(url)
 
   def get_server_details(self, **kwargs):
