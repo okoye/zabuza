@@ -65,3 +65,7 @@ Notes
 =========
 It is being tested with Openstack Havana release and should work for python
 2.6+ environments
+
+Versioning in this module follows the semantic versioning scheme. More
+information can be found here:
+http://semver.org/
