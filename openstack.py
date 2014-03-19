@@ -410,7 +410,7 @@ class Api(object):
     return False
   
   def create_server(self, server, user_data_file=None, user=None,
-                    compute_type='compute'):
+                    compute_type='compute', key_name=None):
     '''
     Create a new server. The main required parameter is a server.
 
@@ -424,6 +424,8 @@ class Api(object):
         a user object that has been authenticated
       compute_type:
         type of compute, e.g compute or computev3
+      key_name:
+        name of ssh_key to be included in server for initial login
     '''
     user = user or self.user
     self._assert_preconditions(user=user)
@@ -443,6 +445,8 @@ class Api(object):
       parameters['server']['security_group'] = server.security_group_name
     if user_data_file:
       parameters['server']['user_data'] = base64.b64encode(open(user_data_file).read())
+    if key_name:
+      parameters['server']['key_name'] = key_name
 
     logging.debug('now creating server %s at url %s'%(parameters, url))
     json_data = self._post_url(url, parameters)
