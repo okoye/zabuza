@@ -1,5 +1,5 @@
-__author__ = 'The Zabuza Developers'
-__version__ = '0.3.3'
+__author__ = 'Williams-Sonoma'
+__version__ = '0.3.1'
 
 METADATA = dict(
   name = 'zabuza',
