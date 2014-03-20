@@ -4,7 +4,7 @@ __version__ = '0.3.2'
 METADATA = dict(
   name = 'zabuza',
   version = __version__,
-  py_modules = ['openstack', 'services'],
+  py_modules = ['openstack'],
   author = __author__,
   author_email = 'contact@chookah.org',
   description = 'A python wrapper around Openstack API',
@@ -15,6 +15,7 @@ METADATA = dict(
 SETUPTOOLS_METADATA = dict(
   install_requires = ['setuptools', 'simplejson', 'requests', 'python-dateutil'],
   include_package_data = True,
+  package_dir={'':'services'},
   test_suite = 'tests',
 )
 
