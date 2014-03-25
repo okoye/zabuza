@@ -1,12 +1,11 @@
 
-
 __author__ = 'Williams-Sonoma'
 __version__ = '0.3.2'
 
 METADATA = dict(
   name = 'zabuza',
   version = __version__,
-  py_modules = ['openstack'],
+  py_modules = ['lib'],
   author = __author__,
   author_email = 'contact@chookah.org',
   description = 'A python wrapper around Openstack API',
@@ -20,9 +19,9 @@ def main():
     SETUPTOOLS_METADATA = dict(
       install_requires = ['setuptools', 'simplejson', 'requests', 'python-dateutil'],
       include_package_data = True,
-      package_dir={'':'zabuza'},
-      packages=find_packages(where='zabuza'),
-      test_suite = 'tests',
+      package_dir={'':'lib'},
+      packages=find_packages(where='lib'),
+      test_suite = 'tests'
     )
     METADATA.update(SETUPTOOLS_METADATA)
     setup(**METADATA)

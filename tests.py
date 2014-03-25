@@ -2,9 +2,9 @@ import unittest
 import logging
 from os import environ
 from traceback import format_exc
-from zabuza.openstack import User, Api, PasswordCredential, Token, Endpoint
-from zabuza.openstack import ServiceCatalog
-from zabuza.services.compute import Server
+from lib.zabuza.openstack import User, Api, PasswordCredential, Token, Endpoint
+from lib.zabuza.openstack import ServiceCatalog
+from lib.zabuza.services.compute import Server
 try:
   import json
 except ImportError:
