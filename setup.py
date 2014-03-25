@@ -1,3 +1,5 @@
+
+
 __author__ = 'Williams-Sonoma'
 __version__ = '0.3.2'
 
@@ -12,22 +14,22 @@ METADATA = dict(
   keywords = 'openstack api',
 )
 
-SETUPTOOLS_METADATA = dict(
-  install_requires = ['setuptools', 'simplejson', 'requests', 'python-dateutil'],
-  include_package_data = True,
-  package_dir={'':'services'},
-  test_suite = 'tests',
-)
-
-
 def main():
   try:
-    import setuptools
+    from setuptools import setup, find_packages
+    SETUPTOOLS_METADATA = dict(
+      install_requires = ['setuptools', 'simplejson', 'requests', 'python-dateutil'],
+      include_package_data = True,
+      package_dir={'':'zabuza'},
+      packages=find_packages(where='zabuza'),
+      test_suite = 'tests',
+    )
     METADATA.update(SETUPTOOLS_METADATA)
-    setuptools.setup(**METADATA)
+    setup(**METADATA)
   except ImportError:
     import distutils.core
     distutils.core.setup(**METADATA)
+
 
 if __name__ == '__main__':
   main()
