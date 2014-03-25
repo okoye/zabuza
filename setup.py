@@ -19,8 +19,8 @@ def main():
     SETUPTOOLS_METADATA = dict(
       install_requires = ['setuptools', 'simplejson', 'requests', 'python-dateutil'],
       include_package_data = True,
-      package_dir={'':'lib'},
-      packages=find_packages(where='lib'),
+      package_dir={'':'src'},
+      packages=find_packages(where='src'),
       test_suite = 'tests'
     )
     METADATA.update(SETUPTOOLS_METADATA)
