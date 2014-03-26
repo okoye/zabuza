@@ -540,13 +540,8 @@ class Api(object):
 
     logging.debug('now fetching details with url %s and options %s'%(url, options))
     json_data = self._get_url(url, parameters=parameters)
-    return self._iterator(json_data['servers'])
-
+    return json_data
   
-  def _iterator(self, an_iterable):
-    #TODO: support for next and previous parameters.
-    for element in an_iterable:
-      yield element
 
   def _get_url(self, url, parameters={}, success_codes=[requests.codes.ok]):
     response = requests.get(url, params=parameters,
