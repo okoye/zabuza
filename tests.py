@@ -216,13 +216,20 @@ class ApiTest(unittest.TestCase):
     server = Server.create_server_for_deployment(image, flavor, name)
     self.api.create_server(server)
     x_server = self.api.get_server_detail(server)
-    print server, x_server
     self.assertEquals(self.api.get_server_detail(server), server)
 
   def test__get_servers_detail(self):
     image = environ.get('ZABUZA_TEST_IMAGE_ID')
     flavor = environ.get('ZABUZA_TEST_FLAVOR_ID') or 1
     name = 'zabuza_test_get_server_detail'
+    #ensure there is at least one server
+    server = Server.create_server_for_deployment(image, flavor, name)
+    self.api.create_server(server)
+    #now, fetch all servers without any args.
+    servers = self.api.get_servers_detail()
+    self.assertTrue(len(server) > 0)
+    for server in servers:
+      self.assertTrue(isinstance(server, Server))
 
 if __name__ == '__main__':
   logging.basicConfig(level=logging.DEBUG)
