@@ -220,7 +220,7 @@ class ServerTest(unittest.TestCase):
     '''
     formatted_data = json.loads(data)
     server = Server.create_server(**formatted_data['server']) 
-    self.assertEquals(server.access_ipv4, formatted_data['server']['access_ipv4'])
+    self.assertEquals(server.access_ipv4, formatted_data['server']['accessIPv4'])
     self.assertEquals(server.host_id, formatted_data['server']['hostId'])
 
   def test__deploy_server_instantiation(self):
