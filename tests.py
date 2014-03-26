@@ -211,7 +211,7 @@ class ApiTest(unittest.TestCase):
   def test__get_server_detail(self):
     image = environ.get('ZABUZA_TEST_IMAGE_ID')
     flavor = environ.get('ZABUZA_TEST_FLAVOR_ID') or 1
-    name = 'zabuza_test_create_server_with_userdata'
+    name = 'zabuza_test_get_server_detail'
     self.assertRaises(Exception, self.api.get_server_detail) #server or server_id must be specified
     server = Server.create_server_for_deployment(image, flavor, name)
     self.api.create_server(server)
@@ -220,8 +220,9 @@ class ApiTest(unittest.TestCase):
     self.assertEquals(self.api.get_server_detail(server), server)
 
   def test__get_servers_detail(self):
-    #TODO: more tests on this.
-    pass
+    image = environ.get('ZABUZA_TEST_IMAGE_ID')
+    flavor = environ.get('ZABUZA_TEST_FLAVOR_ID') or 1
+    name = 'zabuza_test_get_server_detail'
 
 if __name__ == '__main__':
   logging.basicConfig(level=logging.DEBUG)
