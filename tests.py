@@ -161,7 +161,67 @@ class ServerTest(unittest.TestCase):
     self.assertTrue(hasattr(server, 'id'))
     server = Server.create_server(**{'id':'1234'})
     self.assertTrue(hasattr(server, 'id'))
-    
+    data = '''
+    {
+    "server": {
+        "accessIPv4": "",
+        "accessIPv6": "",
+        "addresses": {
+            "private": [
+                {
+                    "addr": "192.168.0.3",
+                    "version": 4
+                }
+            ]
+        },
+        "created": "2012-08-20T21:11:09Z",
+        "flavor": {
+            "id": "1",
+            "links": [
+                {
+                    "href": "http://openstack.example.com/openstack/flavors/1",
+                    "rel": "bookmark"
+                }
+            ]
+        },
+        "hostId": "65201c14a29663e06d0748e561207d998b343e1d164bfa0aafa9c45d",
+        "id": "893c7791-f1df-4c3d-8383-3caae9656c62",
+        "image": {
+            "id": "70a599e0-31e7-49b7-b260-868f441e862b",
+            "links": [
+                {
+                    "href": "http://openstack.example.com/openstack/images/70a599e0-31e7-49b7-b260-868f441e862b",
+                    "rel": "bookmark"
+                }
+            ]
+        },
+        "links": [
+            {
+                "href": "http://openstack.example.com/v2/openstack/servers/893c7791-f1df-4c3d-8383-3caae9656c62",
+                "rel": "self"
+            },
+            {
+                "href": "http://openstack.example.com/openstack/servers/893c7791-f1df-4c3d-8383-3caae9656c62",
+                "rel": "bookmark"
+            }
+        ],
+        "metadata": {
+            "My Server Name": "Apache1"
+        },
+        "name": "new-server-test",
+        "progress": 0,
+        "status": "ACTIVE",
+        "tenant_id": "openstack",
+        "updated": "2012-08-20T21:11:09Z",
+        "user_id": "fake"
+    }
+    } 
+    '''
+    formatted_data = json.loads(data)
+    server = Server.create_server(**formatted_data['server']) 
+    self.assertEquals(server.access_ipv4, formatted_data['server']['access_ipv4'])
+    self.assertEquals(server.host_id, formatted_data['server']['hostId'])
+
   def test__deploy_server_instantiation(self):
     server = Server.create_server_for_deployment('foo', 'bar', 'vaz')
     self.assertTrue(isinstance(server, Server))
@@ -192,6 +252,16 @@ class ApiTest(unittest.TestCase):
     self.api.create_server(server, user_data_file='/tmp/foo.sh')
     self.assertTrue(hasattr(server, 'admin_pass'))
     self.assertTrue(server.admin_pass is not None)
+
+  def test__get_server_detail(self):
+    self.assertRaises(Exception, self.api.get_server_detail) #server or server_id must be specified
+    server = Server.create_server_for_deployment(image, flavor, name)
+    self.api.create_server(server)
+    self.assertEquals(self.api.get_server_detail(server), server)
+
+  def test__get_servers_detail(self):
+    #TODO: more tests on this.
+    pass
 
 if __name__ == '__main__':
   logging.basicConfig(level=logging.DEBUG)

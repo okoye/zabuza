@@ -453,7 +453,8 @@ class Api(object):
     logging.debug('returned data was %s'%json_data)
     server.update_properties(**json_data['server'])
   
-  def get_server_detail(self, server=None, server_id=None, user=None):
+  def get_server_detail(self, server=None, server_id=None, user=None,
+                        compute_type='compute'):
     '''
     Get details of a specific server. 
 
@@ -462,56 +463,92 @@ class Api(object):
         a server object. [Optional]
       server_id:
         id of server we want info on [Optional]
+      user:
+        a user object that has been authenticated
+      compute_type:
+        type of compute, e.g compute or computev3
 
     Note that either the server or server_id must be specified.
     '''
+    user = user or self.user
+    self._assert_preconditions(user=user)
     if not server:
       if not server_id or server_id == '':
         raise Exception('either a server or server_id must be specified')
+    
+    server_id = server_id or server.id
+    endpoint = user.endpoint_manager(compute_type)
+    url = endpoint.fetch_url(['servers', server_id])
 
-    return self._fetch_server_details(url)
+    logging.debug('now fetching details of a specific server with url %s'%(url))
+    json_data = self._get_url(url)
+    return Server.create_server(**json_data['server']) 
 
-  def get_server_details(self, **kwargs):
-    raise NotImplementedError
-
-  def _fetch_server_details(self,
-                            url,
-                            flavor=None, 
-                            name=None, 
-                            limit=None, 
-                            host=None,
-                            user=None):
+  def get_servers_detail(self, flavor=None, name=None, marker=None,
+                        limit=None, status=None, changes_since=None, host=None, 
+                        user=None, compute_type='compute'):
+    '''
+    Get details of all servers.
+    
+    The optional args are for filtering purposes.
+    
+    Args:
+      flavor:
+        string. what flavors of servers to return data for [Optional]
+      name:
+        servers that match what name string? [Optional]
+      marker:
+        UUID for the server you want to set a marker [Optional]
+      limit:
+        integer, size of the information list returned [Optional]
+      status:
+        what status should the servers be? example 'ACTIVE' [Optional]
+      host:
+        host on which these servers are deployed on [Optional]
+      changes_since:
+        a date or timestamp string when the server last changed status [Optional]
+      user:
+        an authenticated user this request should be executed as
+      compute_type:
+        type of compute, e.g compute or computev3
+    '''
     user = user or self.user
     self._assert_preconditions(user=user)
+    endpoint = user.endpoint_manager(compute_type)
+    url = endpoint.fetch_url(['servers', 'detail'])
 
-    #construct parameters if any
+    #construct filtering parameters
     parameters = {}
     if flavor:
       parameters['flavor'] = flavor
     if name:
       parameters['name'] = name
     if limit:
-      parameters['limit'] = limit
+      try:
+        assert type(limit) is int
+      except AssertionError:
+        raise Exception('limit must be an integer')
+      else:
+        parameters['limit'] = limit
     if host:
       parameters['host'] = host
-    
-    logging.debug('now fetching details with url %s and options %s'%(url, parameters))
-    json_data = self._get_url(url, parameters)
-    logging.debug('returned data was %s'%json_data)
+    if status:
+      parameters['status'] = status
+    if changes_since:
+      parameters['changes_since'] = str(dateparser.parse(changes_since))
 
-    if 'servers' in json_data:
-      return self._iterator(json_data['servers'])
-    elif 'server' in json_data:
-      return json_data['server']
-    else:
-      raise Exception('unrecognized parameter in returned json data')
+    logging.debug('now fetching details with url %s and options %s'%(url, options))
+    json_data = self._get_url(url, parameters=parameters)
+    return self._iterator(json_data['servers'])
+
   
   def _iterator(self, an_iterable):
+    #TODO: support for next and previous parameters.
     for element in an_iterable:
       yield element
 
-  def _get_url(self, url, parameters, success_codes=[requests.codes.ok]):
-    response = requests.get(url, data,
+  def _get_url(self, url, parameters={}, success_codes=[requests.codes.ok]):
+    response = requests.get(url, parameters,
                             headers={'content-type':'application/json',
                                      'X-Auth-Token':str(self.user.token)})
     if response.status_code in success_codes:
