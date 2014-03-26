@@ -322,14 +322,13 @@ class Server(object):
     assert isinstance(other_server, Server)
     if other_server.id != self.id:
       return False
-    if other_server.host_id != self.host_id:
-      return False
     if other_server.tenant_id != self.tenant_id:
       return False
-    if other_server.flavor != self.flavor:
-      return False
-    if other_server.image != self.image:
-      return False
+    #TODO: flavor and image support when flavor and image objects introduced
+    #if other_server.flavor != self.flavor:
+    #  return False
+    #if other_server.image != self.image:
+    #  return False
     return True
 
   def __repr__(self):
