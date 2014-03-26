@@ -309,3 +309,20 @@ class Server(object):
   security_group_name = property(get_security_group_name,
                                   set_security_group_name,
                                   doc='string representing the security group name')
+
+  def __eq__(self, other_server):
+    '''
+    define non-transient properties of a server for equality determination
+    '''
+    assert isinstance(other_server, Server)
+    if other_server.id != self.id:
+      return False
+    if other_server.host_id != self.host_id:
+      return False
+    if other_server.tenant_id != self.tenant_id:
+      return False
+    if other_server.flavor != self.flavor:
+      return False
+    if other_server.image != self.image:
+      return False
+    return True
