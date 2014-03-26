@@ -5,6 +5,7 @@ from random import choice
 from traceback import format_exc
 from datetime import datetime
 from dateutil.parser import parse as dateparser
+from services.compute import Server
 try:
   from json import loads, dumps
 except ImportError:
@@ -548,7 +549,7 @@ class Api(object):
       yield element
 
   def _get_url(self, url, parameters={}, success_codes=[requests.codes.ok]):
-    response = requests.get(url, parameters,
+    response = requests.get(url, params=parameters,
                             headers={'content-type':'application/json',
                                      'X-Auth-Token':str(self.user.token)})
     if response.status_code in success_codes:
