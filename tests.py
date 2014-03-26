@@ -1,6 +1,7 @@
 import unittest
 import logging
 from os import environ
+from copy import deepcopy
 from traceback import format_exc
 from src.zabuza.openstack import User, Api, PasswordCredential, Token, Endpoint
 from src.zabuza.openstack import ServiceCatalog
@@ -253,6 +254,11 @@ class ApiTest(unittest.TestCase):
     self.assertTrue(hasattr(server, 'admin_pass'))
     self.assertTrue(server.admin_pass is not None)
 
+  def test__server_equality(self):
+    server = Server.create_server_for_deployment(image, flavor, name)
+    other_server = deepcopy(server)
+    self.assertEquals(server, other_server)
+  
   def test__get_server_detail(self):
     self.assertRaises(Exception, self.api.get_server_detail) #server or server_id must be specified
     server = Server.create_server_for_deployment(image, flavor, name)
