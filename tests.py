@@ -227,7 +227,7 @@ class ApiTest(unittest.TestCase):
     self.api.create_server(server)
     #now, fetch all servers without any args.
     servers = self.api.get_servers_detail()
-    self.assertTrue(len(server) > 0)
+    self.assertTrue(len(servers) > 0)
     for server in servers:
       self.assertTrue(isinstance(server, Server))
 
