@@ -221,7 +221,7 @@ class ApiTest(unittest.TestCase):
   def test__get_servers_detail(self):
     image = environ.get('ZABUZA_TEST_IMAGE_ID')
     flavor = environ.get('ZABUZA_TEST_FLAVOR_ID') or 1
-    name = 'zabuza_test_get_server_detail'
+    name = 'zabuza_test_get_servers_detail'
     #ensure there is at least one server
     server = Server.create_server_for_deployment(image, flavor, name)
     self.api.create_server(server)

@@ -538,9 +538,12 @@ class Api(object):
     if changes_since:
       parameters['changes_since'] = str(dateparser.parse(changes_since))
 
-    logging.debug('now fetching details with url %s and options %s'%(url, options))
+    logging.debug('now fetching details with url %s and options %s'%(url, parameters))
     json_data = self._get_url(url, parameters=parameters)
-    return json_data
+    servers = []
+    for server_json in json_data['servers']:
+      servers.append(Server.create_server(**server_json))
+    return servers
   
 
   def _get_url(self, url, parameters={}, success_codes=[requests.codes.ok]):
