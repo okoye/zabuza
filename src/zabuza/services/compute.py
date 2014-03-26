@@ -223,7 +223,10 @@ class Server(object):
     return self._image
 
   def set_image(self, value):
-    self._image = value
+    if value[0:4] == 'http':
+      self._image = value.split('/')[-1]
+    else:
+      self._image = value
 
   image = property(get_image, set_image,
                   doc='image this server has spawned from')
@@ -326,3 +329,6 @@ class Server(object):
     if other_server.image != self.image:
       return False
     return True
+
+  def __str__(self):
+    return self.id #TODO: should actually be JSON object

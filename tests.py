@@ -215,7 +215,11 @@ class ApiTest(unittest.TestCase):
     self.assertRaises(Exception, self.api.get_server_detail) #server or server_id must be specified
     server = Server.create_server_for_deployment(image, flavor, name)
     self.api.create_server(server)
-    print server
+    x_server = self.api.get_server_detail(server)
+    print 1, server.id, 
+    print 2, x_server.id, 
+    print 1, server.image, 
+    print 2, x_server.image
     self.assertEquals(self.api.get_server_detail(server), server)
 
   def test__get_servers_detail(self):
