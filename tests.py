@@ -216,10 +216,7 @@ class ApiTest(unittest.TestCase):
     server = Server.create_server_for_deployment(image, flavor, name)
     self.api.create_server(server)
     x_server = self.api.get_server_detail(server)
-    print 1, server.id, 
-    print 2, x_server.id, 
-    print 1, server.image, 
-    print 2, x_server.image
+    print server, x_server
     self.assertEquals(self.api.get_server_detail(server), server)
 
   def test__get_servers_detail(self):

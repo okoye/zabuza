@@ -66,6 +66,11 @@ class Server(object):
       security_group_name:
         security group currently applied to this server [Optional]
     '''
+    self.attributes = ['id', 'admin_pass', 'access_ipv4',
+    'access_ipv6', 'addresses', 'created', 'flavor', 'host_id',
+    'image', 'metadata', 'name', 'progress', 'status', 'tenant_id',
+    'updated', 'user_id', 'availability_zone', 'security_group_name']
+
     if not kwargs.get('id'):
       raise Exception("you must specify an id for a server at least")
     else:
@@ -223,10 +228,7 @@ class Server(object):
     return self._image
 
   def set_image(self, value):
-    if value[0:4] == 'http':
-      self._image = value.split('/')[-1]
-    else:
-      self._image = value
+    self._image = value
 
   image = property(get_image, set_image,
                   doc='image this server has spawned from')
@@ -330,5 +332,11 @@ class Server(object):
       return False
     return True
 
+  def __repr__(self):
+    rep = dict()
+    for attrb in self.attributes:
+      rep[attrb] = str(getattr(self, attrb))
+    return rep
+
   def __str__(self):
-    return self.id #TODO: should actually be JSON object
+    return str(self.__repr__())
