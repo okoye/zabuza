@@ -163,62 +163,7 @@ class ServerTest(unittest.TestCase):
     server = Server.create_server(**{'id':'1234'})
     self.assertTrue(hasattr(server, 'id'))
     #TODO: move to designated json file
-    data = '''
-    {
-    "server": {
-        "accessIPv4": "192.152.168.12",
-        "accessIPv6": "",
-        "addresses": {
-            "private": [
-                {
-                    "addr": "192.168.0.3",
-                    "version": 4
-                }
-            ]
-        },
-        "created": "2012-08-20T21:11:09Z",
-        "flavor": {
-            "id": "1",
-            "links": [
-                {
-                    "href": "http://openstack.example.com/openstack/flavors/1",
-                    "rel": "bookmark"
-                }
-            ]
-        },
-        "hostId": "65201c14a29663e06d0748e561207d998b343e1d164bfa0aafa9c45d",
-        "id": "893c7791-f1df-4c3d-8383-3caae9656c62",
-        "image": {
-            "id": "70a599e0-31e7-49b7-b260-868f441e862b",
-            "links": [
-                {
-                    "href": "http://openstack.example.com/openstack/images/70a599e0-31e7-49b7-b260-868f441e862b",
-                    "rel": "bookmark"
-                }
-            ]
-        },
-        "links": [
-            {
-                "href": "http://openstack.example.com/v2/openstack/servers/893c7791-f1df-4c3d-8383-3caae9656c62",
-                "rel": "self"
-            },
-            {
-                "href": "http://openstack.example.com/openstack/servers/893c7791-f1df-4c3d-8383-3caae9656c62",
-                "rel": "bookmark"
-            }
-        ],
-        "metadata": {
-            "My Server Name": "Apache1"
-        },
-        "name": "new-server-test",
-        "progress": 0,
-        "status": "ACTIVE",
-        "tenant_id": "openstack",
-        "updated": "2012-08-20T21:11:09Z",
-        "user_id": "fake"
-    }
-    } 
-    '''
+    data = open('data/server.json').read()
     formatted_data = json.loads(data)
     server = Server.create_server(**formatted_data['server']) 
     self.assertEquals(server.access_ipv4, formatted_data['server']['accessIPv4'])
@@ -251,7 +196,7 @@ class ApiTest(unittest.TestCase):
     flavor = environ.get('ZABUZA_TEST_FLAVOR_ID') or 1
     name = 'zabuza_test_create_server_with_userdata'
     server = Server.create_server_for_deployment(image, flavor, name)
-    self.api.create_server(server, user_data_file='/tmp/foo.sh')
+    self.api.create_server(server, user_data_file='data/userdata.sh')
     self.assertTrue(hasattr(server, 'admin_pass'))
     self.assertTrue(server.admin_pass is not None)
 
