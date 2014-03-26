@@ -162,7 +162,6 @@ class ServerTest(unittest.TestCase):
     self.assertTrue(hasattr(server, 'id'))
     server = Server.create_server(**{'id':'1234'})
     self.assertTrue(hasattr(server, 'id'))
-    #TODO: move to designated json file
     data = open('data/server.json').read()
     formatted_data = json.loads(data)
     server = Server.create_server(**formatted_data['server']) 
