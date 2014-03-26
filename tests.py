@@ -162,10 +162,11 @@ class ServerTest(unittest.TestCase):
     self.assertTrue(hasattr(server, 'id'))
     server = Server.create_server(**{'id':'1234'})
     self.assertTrue(hasattr(server, 'id'))
+    #TODO: move to designated json file
     data = '''
     {
     "server": {
-        "accessIPv4": "",
+        "accessIPv4": "192.152.168.12",
         "accessIPv6": "",
         "addresses": {
             "private": [
@@ -255,11 +256,17 @@ class ApiTest(unittest.TestCase):
     self.assertTrue(server.admin_pass is not None)
 
   def test__server_equality(self):
+    image = environ.get('ZABUZA_TEST_IMAGE_ID')
+    flavor = environ.get('ZABUZA_TEST_FLAVOR_ID') or 1
+    name = 'zabuza_test_create_server_with_userdata' 
     server = Server.create_server_for_deployment(image, flavor, name)
     other_server = deepcopy(server)
     self.assertEquals(server, other_server)
   
   def test__get_server_detail(self):
+    image = environ.get('ZABUZA_TEST_IMAGE_ID')
+    flavor = environ.get('ZABUZA_TEST_FLAVOR_ID') or 1
+    name = 'zabuza_test_create_server_with_userdata'
     self.assertRaises(Exception, self.api.get_server_detail) #server or server_id must be specified
     server = Server.create_server_for_deployment(image, flavor, name)
     self.api.create_server(server)
