@@ -1,6 +1,10 @@
+try:
+  import json
+except ImportError:
+  import simplejson as json
+
 #
 # Provides the models required by the compute api
-#
 #
 class Server(object):
   '''
@@ -335,7 +339,7 @@ class Server(object):
     rep = dict()
     for attrb in self.attributes:
       rep[attrb] = str(getattr(self, attrb))
-    return rep
+    return json.dumps(rep)
 
   def __str__(self):
-    return str(self.__repr__())
+    return self.__repr__()
