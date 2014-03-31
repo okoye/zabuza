@@ -8,16 +8,18 @@ from zabuza.openstack import Api, User, PasswordCredential
 from zabuza.services.compute import Server
 
 def options_parser():
-  parser = optparse.OptionsParser()
-  parser.add_option('-u', '--user', help='username for authentication',
+  parser = optparse.OptionParser()
+  parser.add_option('-u', '--user', help='username for authentication (Required)',
     dest='user', default=environ.get('ZABUZA_USERNAME') or None)
   parser.add_option('-p', '--password', help='password for authentication (Optional)',
     dest='password', default=environ.get('ZABUZA_PASSWORD') or None)
-  parser.add_option('-a', '--adminurl', help='admin url for token exchange',
+  parser.add_option('-a', '--adminurl', help='admin url for token exchange (Required)',
     dest='adminurl', default=environ.get('ZABUZA_TOKEN_URL') or None)
-  parser.add_option('-t', '--tenant', help='tenant name to authenticate to',
+  parser.add_option('-t', '--tenant', help='tenant name to authenticate to (Required)',
     dest='tenant', default=environ.get('ZABUZA_TENANT_NAME') or None)
-
+  parser.add_option('-o', '--operation', 
+    help='[create | read | update | delete] operations (Optional)',
+    dest='operation', default='read')
   opts, args = parser.parse_args()
   options_dict = {}
   #now, parse out options in 'logical' order
@@ -32,4 +34,23 @@ def options_parser():
   else:
     options_dict['password'] = opts.password
 
+  if not opts.admin_url:
+    raise Exception('you must specify an admin url endpoint for authentication')
+  else:
+    options_dict['adminurl'] = opts.adminurl
 
+  if not opts.tenant:
+    raise Exception('you must specify a tenant')
+  else:
+    options_dict['tenant'] = opts.tenant
+
+  return options_dict
+
+def executor(options):
+  '''
+  determines what operation you want to execute and then delegates it to
+  method implementing said interface
+  '''
+
+if __name__ == '__main__':
+  executor(options_parser())
