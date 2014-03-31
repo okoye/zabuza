@@ -176,10 +176,19 @@ class ApiTest(unittest.TestCase):
 
   def setUp(self):
     url = environ.get('ZABUZA_TOKEN_URL')
+    self.admin_url = url
     username = environ.get('ZABUZA_USERNAME')
     password = environ.get('ZABUZA_PASSWORD')
     tenant = environ.get('ZABUZA_TENANT_NAME')
     self.api = Api(url, username=username, password=password, tenant_name=tenant)
+
+  def test__api_instantiation_with_user(self):
+    user = User(environ.get('ZABUZA_TOKEN_URL'),
+      username=environ.get('ZABUZA_USERNAME'),
+      password=environ.get('ZABUZA_PASSWORD'),
+      tenant_name=environ.get('ZABUZA_TENANT_NAME'))
+    api = Api(self.admin_url, user=user)
+    self.assertTrue(type(api) == Api)
 
   def test__create_server(self):
     image = environ.get('ZABUZA_TEST_IMAGE_ID')

@@ -383,7 +383,7 @@ class Api(object):
       you have provided a user object
     '''
     if user:
-      assert isinstance(User, user)
+      assert isinstance(user, User)
       self.user = user
     else:
       self.user = User(auth_url, username=username, password=password,
