@@ -7,6 +7,11 @@ from os import environ
 from zabuza.openstack import Api, User, PasswordCredential
 from zabuza.services.compute import Server
 
+########################################
+#     Utility Functions and Globals
+########################################
+user = None #TODO store somewhere for future use
+
 def options_parser():
   parser = optparse.OptionParser()
   parser.add_option('-u', '--user', help='username for authentication (Required)',
@@ -44,13 +49,60 @@ def options_parser():
   else:
     options_dict['tenant'] = opts.tenant
 
+  options_dict['operation'] = opts.operation
+
   return options_dict
 
+def great_expectations(expects, reality):
+  '''
+  ensures that expectations match reality :-)
+
+  that is answers the question, are all expected params defined?
+  '''
+  for expectation in expects:
+    if expectation not in reality:
+      return (False, expectation)
+
+def authenticator(options):
+  '''
+  authenticates with api
+  '''
+  global user
+  user = User(options['adminurl'],
+    username=options.get('user'),
+    password=options.get('password'),
+    tenant_name=options.get('tenant'))
+  user.authenticate()
+
+
+##################################
+          Action Handlers
+##################################
+def create(options):
+  expects = ['image', 'flavor', 'name']
+  reality, issue = great_expectations(expects, options)
+  if not reality:
+    raise Exception('you must specify %s'%issue)
+  
+
+#################################
+          Action Switch
+##################################
 def executor(options):
   '''
   determines what operation you want to execute and then delegates it to
   method implementing said interface
   '''
+  if options['operation'] == 'create':
+    #TODO creaty stuff
+    pass
+  elif options['operation'] == 'read':
+    #TODO ready stuff
+    pass
+  elif options['operation'] == 'update':
+    raise NotImplementedError #unsupported by api
+  elif options['operation'] = 'delete':
+    raise NotImplementedError #unsupported by api
 
 if __name__ == '__main__':
   executor(options_parser())
