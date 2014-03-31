@@ -60,6 +60,12 @@ For more information on supported api methods call:
 >>> help(openstack.Api)
 
 
+The tools directory contains commandline scripts showing how to do the following:
+
+* creating a server
+* listing details of a server
+* listing all nodes and filtering on some options
+
 
 Notes
 =========
