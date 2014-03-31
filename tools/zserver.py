@@ -1,5 +1,5 @@
 '''
-Demonstrates how you may create a server using the zabuza apis
+full fledged command like client for managing server
 '''
 import getpass
 import optparse
@@ -25,6 +25,13 @@ def options_parser():
   parser.add_option('-o', '--operation', 
     help='[create | read | update | delete] operations (Optional)',
     dest='operation', default='read')
+  parser.add_option('-i', '--image', help='image id', dest='image',
+    default=None)
+  parser.add_option('-f', '--flavor', help='flavor id', dest='flavor',
+    default=None)
+  parser.add_option('-n', '--name', help='compute server name', dest='name',
+    default=None)
+
   opts, args = parser.parse_args()
   options_dict = {}
   #now, parse out options in 'logical' order
@@ -39,7 +46,7 @@ def options_parser():
   else:
     options_dict['password'] = opts.password
 
-  if not opts.admin_url:
+  if not opts.adminurl:
     raise Exception('you must specify an admin url endpoint for authentication')
   else:
     options_dict['adminurl'] = opts.adminurl
@@ -49,7 +56,18 @@ def options_parser():
   else:
     options_dict['tenant'] = opts.tenant
 
-  options_dict['operation'] = opts.operation
+  supported_operations = ['create', 'read', 'update', 'delete']
+  if opts.operation not in supported_operations:
+    raise Exception('we only support following operations %s'%supported_operations)
+  else:
+    options_dict['operation'] = opts.operation
+  
+  if opts.image:
+    options_dict['image'] = opts.image
+  if opts.flavor:
+    options_dict['flavor'] = opts.flavor
+  if opts.name:
+    options_dict['name'] = opts.name
 
   return options_dict
 
@@ -62,6 +80,7 @@ def great_expectations(expects, reality):
   for expectation in expects:
     if expectation not in reality:
       return (False, expectation)
+  return (True, '')
 
 def authenticator(options):
   '''
@@ -76,32 +95,44 @@ def authenticator(options):
 
 
 ##################################
-          Action Handlers
+#          Action Handlers
 ##################################
 def create(options):
+  global user
   expects = ['image', 'flavor', 'name']
   reality, issue = great_expectations(expects, options)
   if not reality:
-    raise Exception('you must specify %s'%issue)
-  
+    raise Exception('you must specify a(n) %s'%issue)
+  api = Api(options['adminurl'], user=user)
+  server = Server.create_server_for_deployment(options['image'],
+    options['flavor'], options['name'])
+  kwargs = {}
+  kwargs['user_data_file'] = options.get('userdatafile', None)
+  if 'computetype' in options:
+    kwargs['compute_type'] = options.get('computetype')
+  kwargs['key_name'] = options.get('keyname')
+
+  result = api.create_server(server, **kwargs)
+
+  print result
 
 #################################
-          Action Switch
+#          Action Switch
 ##################################
 def executor(options):
   '''
   determines what operation you want to execute and then delegates it to
   method implementing said interface
   '''
+  authenticator(options)
   if options['operation'] == 'create':
-    #TODO creaty stuff
-    pass
+    create(options)
   elif options['operation'] == 'read':
     #TODO ready stuff
     pass
   elif options['operation'] == 'update':
     raise NotImplementedError #unsupported by api
-  elif options['operation'] = 'delete':
+  elif options['operation'] == 'delete':
     raise NotImplementedError #unsupported by api
 
 if __name__ == '__main__':

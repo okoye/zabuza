@@ -524,7 +524,7 @@ class Api(object):
       parameters['flavor'] = flavor
     if name:
       parameters['name'] = name
-    if limit:
+    if limit: #TODO: support for next batch of servers?
       try:
         assert type(limit) is int
       except AssertionError:
@@ -544,7 +544,6 @@ class Api(object):
     for server_json in json_data['servers']:
       servers.append(Server.create_server(**server_json))
     return servers
-  
 
   def _get_url(self, url, parameters={}, success_codes=[requests.codes.ok]):
     response = requests.get(url, params=parameters,
