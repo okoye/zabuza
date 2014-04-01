@@ -545,6 +545,68 @@ class Api(object):
       servers.append(Server.create_server(**server_json))
     return servers
 
+  def delete_server(self, server=None, server_id=None, user=None,
+                    compute_type='compute'):
+    '''
+    Delete a deployed server
+
+    Args:
+      server:
+        a server object. [Optional]
+      server_id:
+        an id string corresponding to server for deletion
+      user:
+        an authenticated user
+      compute_type:
+        type of compute, e.g compute or computev3
+    '''
+    user = user or self.user
+    self._assert_preconditions(user=user)
+    if not server or type(server) != Server:
+      if not server_id or server_id == '':
+        raise Exception('you must specify a server object or a server_id for deletion')
+    
+    server_id = server_id or server.id
+    endpoint = user.endpoint_manager(compute_type)
+    url = endpoint.fetch_url(['servers', server_id])
+
+    logging.debug('now deleting server with id %s using url %s'%(server_id, url))
+    response = requests.delete(url,
+                            headers={'content-type':'application/json',
+                                      'X-Auth-Token':str(self.user.token)})
+    if response.status_code == requests.codes.no_content:
+      logging.debug('delete_url returned status code %s'%response.status_code)
+    else:
+      logging.debug('response failed with status code %s'%response.status_code)
+      response.raise_for_status()
+
+
+  def delete_servers(self, servers=[], server_ids=[], user=None, 
+                    compute_type='compute'):
+    '''
+    A convenience function that deletes an array of servers.
+
+    Args:
+      servers:
+        a collection of server objects. [Optional]
+      server_ids:
+        an collection of server objects. [Optional]
+      user:
+        a user that has been authenticated
+      compute_type:
+        type of compute, e.g compute or computev3
+
+    Note that either servers or server_ids must be specified.
+    '''
+    #really just a convenience function. does nothing on its own.
+    for server in servers:
+      self.delete_server(server=server, server_id=None, user=user,
+        compute_type=compute_type)
+
+    for server_id in server_ids:
+      self.delete_server(server=None, server_id=server_id, user=user,
+        compute_type=compute_type)
+
   def _get_url(self, url, parameters={}, success_codes=[requests.codes.ok]):
     response = requests.get(url, params=parameters,
                             headers={'content-type':'application/json',
