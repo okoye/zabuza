@@ -1,17 +1,11 @@
 #!/bin/bash
 cat > /tmp/foo.repo <<EOF
 
-[wsgc-snapshotrepo]
-name=wsgc-snapshotrepo repository
-baseurl=https://snapshotrepo.wsgc.com/artifactory/snapshotrepo
-enabled=1
-sslverify=false
-gpgcheck=0
-
-[wsgc-ext-release-local]
-name=wsgc-ext-release-local repository
-baseurl=https://artifactory.wsgc.com/artifactory/ext-release-local
-enabled=1
-sslverify=false
-gpgcheck=0
+[centosplus]
+name=CentOS-$releasever - Plus
+mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=centosplus
+#baseurl=http://mirror.centos.org/centos/$releasever/centosplus/$basearch/
+gpgcheck=1
+enabled=0
+gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-5  <== -CentOS-6 in CentOS-6
 EOF
