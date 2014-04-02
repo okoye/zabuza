@@ -177,9 +177,11 @@ class ApiTest(unittest.TestCase):
   def setUp(self):
     url = environ.get('ZABUZA_TOKEN_URL')
     self.admin_url = url
-    username = environ.get('ZABUZA_USERNAME')
-    password = environ.get('ZABUZA_PASSWORD')
-    tenant = environ.get('ZABUZA_TENANT_NAME')
+    self.username = username = environ.get('ZABUZA_USERNAME')
+    self.password = password = environ.get('ZABUZA_PASSWORD')
+    self.tenant = tenant = environ.get('ZABUZA_TENANT_NAME')
+    self.image = environ.get('ZABUZA_TEST_IMAGE_ID')
+    self.flavor = environ.get('ZABUZA_TEST_FLAVOR_ID') or 1
     self.api = Api(url, username=username, password=password, tenant_name=tenant)
 
   def test__api_instantiation_with_user(self):
@@ -191,8 +193,8 @@ class ApiTest(unittest.TestCase):
     self.assertTrue(type(api) == Api)
 
   def test__create_server(self):
-    image = environ.get('ZABUZA_TEST_IMAGE_ID')
-    flavor = environ.get('ZABUZA_TEST_FLAVOR_ID') or 1
+    image = self.image
+    flavor = self.flavor
     name = 'zabuza_test_create_server'
     server = Server.create_server_for_deployment(image, flavor, name)
     self.api.create_server(server)
@@ -200,8 +202,8 @@ class ApiTest(unittest.TestCase):
     self.assertTrue(server.admin_pass is not None)
 
   def test__create_server_with_userdata(self):
-    image = environ.get('ZABUZA_TEST_IMAGE_ID')
-    flavor = environ.get('ZABUZA_TEST_FLAVOR_ID') or 1
+    image = self.image
+    flavor = self.flavor
     name = 'zabuza_test_create_server_with_userdata'
     server = Server.create_server_for_deployment(image, flavor, name)
     self.api.create_server(server, user_data_file='data/userdata.sh')
@@ -209,16 +211,16 @@ class ApiTest(unittest.TestCase):
     self.assertTrue(server.admin_pass is not None)
 
   def test__server_equality(self):
-    image = environ.get('ZABUZA_TEST_IMAGE_ID')
-    flavor = environ.get('ZABUZA_TEST_FLAVOR_ID') or 1
+    image = self.image
+    flavor = self.flavor
     name = 'zabuza_test_create_server_with_userdata' 
     server = Server.create_server_for_deployment(image, flavor, name)
     other_server = deepcopy(server)
     self.assertEquals(server, other_server)
   
   def test__get_server_detail(self):
-    image = environ.get('ZABUZA_TEST_IMAGE_ID')
-    flavor = environ.get('ZABUZA_TEST_FLAVOR_ID') or 1
+    image = self.image
+    flavor = self.flavor
     name = 'zabuza_test_get_server_detail'
     self.assertRaises(Exception, self.api.get_server_detail) #server or server_id must be specified
     server = Server.create_server_for_deployment(image, flavor, name)
@@ -227,8 +229,8 @@ class ApiTest(unittest.TestCase):
     self.assertEquals(self.api.get_server_detail(server), server)
 
   def test__get_servers_detail(self):
-    image = environ.get('ZABUZA_TEST_IMAGE_ID')
-    flavor = environ.get('ZABUZA_TEST_FLAVOR_ID') or 1
+    image = self.image
+    flavor = self.flavor
     name = 'zabuza_test_get_servers_detail'
     #ensure there is at least one server
     server = Server.create_server_for_deployment(image, flavor, name)
@@ -238,6 +240,13 @@ class ApiTest(unittest.TestCase):
     self.assertTrue(len(servers) > 0)
     for server in servers:
       self.assertTrue(isinstance(server, Server))
+
+  def test__delete_servers(self):
+    image = self.image
+    flavor = self.flavor
+    name = 'zabuza_test_delete_server'
+    server = Server.create_server_for_deployment(image, flavor, name)
+    self.api.delete_server(server=server)
 
 if __name__ == '__main__':
   logging.basicConfig(level=logging.DEBUG)

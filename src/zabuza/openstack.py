@@ -554,11 +554,13 @@ class Api(object):
       server:
         a server object. [Optional]
       server_id:
-        an id string corresponding to server for deletion
+        an id string corresponding to server for deletion [Optional]
       user:
-        an authenticated user
+        an authenticated user [Optional]
       compute_type:
-        type of compute, e.g compute or computev3
+        type of compute, e.g compute or computev3 [Optional]
+
+    Note that either servers or server_ids must be specified
     '''
     user = user or self.user
     self._assert_preconditions(user=user)
