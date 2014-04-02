@@ -1,5 +1,6 @@
 import unittest
 import logging
+import urllib2
 from os import environ
 from copy import deepcopy
 from traceback import format_exc
@@ -246,8 +247,9 @@ class ApiTest(unittest.TestCase):
     flavor = self.flavor
     name = 'zabuza_test_delete_server'
     server = Server.create_server_for_deployment(image, flavor, name)
-    self.api.delete_server(server=server)
-
+    self.api.create_server(server)
+    self.api.delete_server(server)
+    
 if __name__ == '__main__':
   logging.basicConfig(level=logging.DEBUG)
   unittest.main()
