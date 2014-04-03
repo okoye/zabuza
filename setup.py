@@ -1,6 +1,6 @@
 
 __author__ = 'Williams-Sonoma'
-__version__ = '0.4'
+__version__ = '0.4.1'
 
 METADATA = dict(
   name = 'zabuza',
